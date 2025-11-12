@@ -48,6 +48,8 @@ struct StaggeredList: View {
             .padding()
         }
         .animation(.default, value: images)
+        .scrollBounceBehavior(.basedOnSize)
+        .scrollIndicators(.never)
     }
 }
 

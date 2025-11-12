@@ -26,12 +26,13 @@ struct GridView_GalleryApp: App {
 
     var body: some Scene {
         WindowGroup {
-            NavigationStack(path: $navigation.path) {
-                ContentView()
-            }
-            .navigationDestination(for: Destination.self) { destination in
-                navigation.returnView(destination)
-            }
+            TabControllerView(ns: navigation)
+//            NavigationStack(path: $navigation.path) {
+//                TabControllerView()
+//            }
+//            .navigationDestination(for: Destination.self) { destination in
+//                navigation.returnView(destination)
+//            }
         }
         .environment(navigation)
         .environment(database)
