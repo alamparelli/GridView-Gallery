@@ -11,9 +11,9 @@ class ImageItem {
     var fulldescription: String?
     var projects: [Project]?
     var tags: [Tag]?
-    var createdAt: Date = Date()
+    var createdAt: Date
     
-    init(imageData: Data, fulldescription: String? = nil, projects: [Project]? = nil, tags: [Tag]? = nil, createdAt: Date) {
+    init(imageData: Data, fulldescription: String? = nil, projects: [Project]? = nil, tags: [Tag]? = nil, createdAt: Date = Date()) {
         self.imageData = imageData
         self.fulldescription = fulldescription
         self.projects = projects

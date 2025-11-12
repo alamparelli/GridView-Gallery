@@ -1,0 +1,56 @@
+//
+// Copyright (c) 2025. Created by Alessandro L. All rights reserved.
+//
+
+import SwiftUI
+
+struct StaggeredList: View {
+    let columns: Int = 2
+    var images: [ImageItem] = []
+        
+    var splitArray: [[ImageItem]] {
+        var result: [[ImageItem]] = []
+        
+        var list1: [ImageItem] = []
+        var list2: [ImageItem] = []
+        
+        images.forEach { image in
+            let index = images.firstIndex {$0.id == image.id }
+            
+            if let index = index {
+                if index % 2 == 0  {
+                    list1.append(image)
+                } else {
+                    list2.append(image)
+                }
+            }
+        }
+        result.append(list1)
+        result.append(list2)
+        return result
+    }
+    
+    var body: some View {
+        ScrollView {
+            HStack(alignment: .top) {
+                LazyVStack(spacing: 8) {
+                    ForEach(splitArray[0], id: \.self) { item in
+                        ImageView(image: item.imageData)
+                    }
+                }
+                
+                LazyVStack(spacing: 8) {
+                    ForEach(splitArray[1], id: \.self) { item in
+                        ImageView(image: item.imageData)
+                    }
+                }
+            }
+            .padding()
+        }
+        .animation(.default, value: images)
+    }
+}
+
+//#Preview {
+//    StaggeredList()
+//}

@@ -5,6 +5,7 @@
 import SwiftUI
 import SwiftData
 
+
 @Observable
 class DatabaseService {
     let context: ModelContext
@@ -15,6 +16,39 @@ class DatabaseService {
     
     init(context: ModelContext) {
         self.context = context
+        
+        self.refreshAll()
+    }
+    
+    private func refreshAll() {
+        self.images = self.queryExtract(ImageItem.self)
+        self.projects = self.queryExtract(Project.self)
+        self.tags = self.queryExtract(Tag.self)
+    }
+    
+    private func refreshImages() {
+        self.images = self.queryExtract(ImageItem.self)
+    }
+    
+    private func refreshProjects() {
+        self.projects = self.queryExtract(Project.self)
+    }
+    
+    private func refreshTags() {
+        self.tags = self.queryExtract(Tag.self)
+    }
+    
+    private func queryExtract<T: PersistentModel>(_ type : T.Type) -> [T] {
+        let descriptor = FetchDescriptor<T>(predicate: #Predicate { _ in true})
+        var data: [T] = []
+        
+        do {
+            data = try context.fetch(descriptor)
+        } catch {
+            print("Error fetching notes: \(error)")
+        }
+        
+        return data
     }
     
     private func save() {
@@ -24,6 +58,7 @@ class DatabaseService {
     func addImageItem(_ imageItem: ImageItem) {
         context.insert(imageItem)
         self.save()
+        self.refreshImages()
     }
     
     func editImageItem() {
@@ -33,18 +68,22 @@ class DatabaseService {
     func removeImageItem(_ imageItem: ImageItem) {
         context.delete(imageItem)
         self.save()
+        self.refreshImages()
     }
     
     func removeImageItems(_ images: [ImageItem]) {
         for image in images {
+            _ = image.imageData // fix for external storage
             context.delete(image)
         }
         self.save()
+        self.refreshImages()
     }
     
     func addTag(_ tag: Tag) {
         context.insert(tag)
         self.save()
+        self.refreshTags()
     }
     
     func editTag() {
@@ -54,11 +93,13 @@ class DatabaseService {
     func removeTag(_ tag: Tag) {
         context.delete(tag)
         self.save()
+        self.refreshTags()
     }
     
     func addProject(_ project: Project) {
         context.insert(project)
         self.save()
+        self.refreshProjects()
     }
     
     func editProject() {
@@ -68,5 +109,6 @@ class DatabaseService {
     func removeProject(_ project: Project) {
         context.delete(project)
         self.save()
+        self.refreshProjects()
     }
 }
