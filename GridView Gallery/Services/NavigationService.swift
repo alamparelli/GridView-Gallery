@@ -7,6 +7,7 @@ enum Destination: Hashable {
     case gallery
     case projects
     case settings
+    case debug
     // fill other depending your needs
 }
 
@@ -23,6 +24,8 @@ class NavigationService {
             ContentView()
         case .settings:
             ContentView()
+        case .debug:
+            DebugView()
         }
     }
     

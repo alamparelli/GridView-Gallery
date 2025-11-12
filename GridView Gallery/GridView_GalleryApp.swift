@@ -9,6 +9,7 @@ import SwiftData
 struct GridView_GalleryApp: App {
     @State private var navigation = NavigationService()
     
+    var database: DatabaseService
     let modelContainer: ModelContainer
     
     init() {
@@ -20,6 +21,7 @@ struct GridView_GalleryApp: App {
             fatalError("Cannot setup SwiftData")
         }
         
+        database = DatabaseService(context: modelContainer.mainContext)
     }
 
     var body: some Scene {
@@ -32,6 +34,7 @@ struct GridView_GalleryApp: App {
             }
         }
         .environment(navigation)
+        .environment(database)
         .modelContainer(modelContainer)
     }
 }
