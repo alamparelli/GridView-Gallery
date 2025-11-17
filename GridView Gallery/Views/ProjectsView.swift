@@ -29,7 +29,9 @@ struct ProjectsView: View {
                 ScrollView {
                     LazyVGrid(columns: columns) {
                         ForEach(db.projects.sorted()) { project in
-                            ProjectSquareView(project: project, images: db.projectImages(project))
+                            if let images = project.images {
+                                ProjectSquareView(project: project, images: images)
+                            }
                         }
                     }
                     .padding()
@@ -39,13 +41,24 @@ struct ProjectsView: View {
                 .scrollIndicators(.never)
             }
         }
+        .animation(.default, value: db.projects)
         .navigationTitle("Projects")
         .navigationBarTitleDisplayMode(.automatic)
         .toolbar {
-            Button {
-                showAddProject = true
-            } label: {
-                Label("Add a project", systemImage: "plus.rectangle.on.folder")
+            ToolbarItem {
+                Button {
+                    showAddProject = true
+                } label: {
+                    Label("Add a project", systemImage: "plus.rectangle.on.folder")
+                }
+            }
+            ToolbarItem {
+                //Debug
+                Button("Delete") {
+                    for pr in db.projects {
+                        db.removeProject(pr)
+                    }
+                }
             }
         }
         .sheet(isPresented: $showAddProject) {

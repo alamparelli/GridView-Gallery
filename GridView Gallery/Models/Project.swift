@@ -7,7 +7,8 @@ import SwiftData
 @Model
 class Project: Comparable {
     var name: String?
-        
+    @Relationship(deleteRule: .nullify, inverse: \ImageItem.project) var images: [ImageItem]?
+
     var unwrappedName: String {
         name ?? "Unknown"
     }

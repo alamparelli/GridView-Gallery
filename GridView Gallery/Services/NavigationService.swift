@@ -9,6 +9,7 @@ enum Destination: Hashable {
     case settings
     case search
     case debug
+    case addImage
     // fill other depending your needs
 }
 
@@ -29,6 +30,8 @@ class NavigationService {
             SearchView()
         case .debug:
             DebugView()
+        case .addImage:
+            AddImageView()
         }
     }
     

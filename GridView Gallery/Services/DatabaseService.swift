@@ -16,7 +16,7 @@ class DatabaseService {
     
     func projectImages(_ project: Project) -> [ImageItem] {
         let pName = project.name
-        let descriptor = FetchDescriptor<ImageItem>(predicate: #Predicate { $0.project.name == pName})
+        let descriptor = FetchDescriptor<ImageItem>(predicate: #Predicate { $0.project?.name == pName})
         var data: [ImageItem] = []
         
         do {

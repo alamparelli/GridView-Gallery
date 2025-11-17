@@ -10,14 +10,13 @@ import SwiftUI
 class ImageItem {
     @Attribute(.externalStorage) var imageData: Data
     var fulldescription: String?
-    var project: Project
+    @Relationship(deleteRule: .nullify) var project: Project?
     var tags: [Tag]?
     var createdAt: Date
     
-    init(imageData: Data, fulldescription: String? = nil, project: Project = Project(), tags: [Tag]? = nil, createdAt: Date = Date()) {
+    init(imageData: Data, fulldescription: String? = nil, tags: [Tag]? = nil, createdAt: Date = Date()) {
         self.imageData = imageData
         self.fulldescription = fulldescription
-        self.project = project
         self.tags = tags
         self.createdAt = createdAt
     }

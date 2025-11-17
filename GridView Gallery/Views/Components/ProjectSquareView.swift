@@ -4,6 +4,21 @@
 
 import SwiftUI
 
+struct ImageItemView: View {
+    var index: Int = 0
+    var images: [ImageItem]
+    
+    var body: some View {
+        if let image = images[index].uiImage?.preparingThumbnail(of: images[index].uiImage!.size) {
+            Image(uiImage: image )
+                .resizable()
+                .scaledToFill()
+                .clipped()
+            
+        }
+    }
+}
+
 struct ProjectSquareView: View {
     var project: Project
     var images: [ImageItem]
@@ -23,56 +38,48 @@ struct ProjectSquareView: View {
                     Rectangle()
                         .fill(Color.gray.opacity(0.1))
                 }
-                .frame(minHeight: 150)
+                .frame(width: 180, height: 173)
                 .cornerRadius(10)
             } else {
                 switch id {
                 case 1:
                     HStack (spacing: 0) {
-                        if let image = images[0].uiImage {
-                            Image(uiImage: image )
-                        }
+                        ImageItemView(index: 0, images: images)
                     }
-                    .frame(minHeight: 150)
+                    .frame(width: 180)
                     .cornerRadius(10)
                 case 2:
                     HStack (spacing: 0) {
-                        if let image = images[0].uiImage {
-                            Image(uiImage: image )
-                        }
+                        ImageItemView(index: 0, images: images)
+
                         VStack (spacing: 0) {
-                            if let image = images[1].uiImage {
-                                Image(uiImage: image )
-                            }
-                            if let image = images[2].uiImage {
-                                Image(uiImage: image )
-                            }
+                            ImageItemView(index: 1, images: images)
+
+                            ImageItemView(index: 2, images: images)
+
                         }
                     }
-                    .frame(minHeight: 150)
+                    .frame(width: 180)
                     .cornerRadius(10)
                 default:
                     HStack (spacing: 0) {
                         VStack (spacing: 0) {
-                            if let image = images[0].uiImage {
-                                Image(uiImage: image )
-                            }
-                            if let image = images[1].uiImage {
-                                Image(uiImage: image )
-                            }
+                            ImageItemView(index: 0, images: images)
+
+                            ImageItemView(index: 1, images: images)
+
                         }
-                        if let image = images[2].uiImage {
-                            Image(uiImage: image )
-                        }
+                        ImageItemView(index: 2, images: images)
+
                     }
-                    .frame(minHeight: 150)
+                    .frame(width: 180)
                     .cornerRadius(10)
                 }
             }
             VStack (alignment: .leading) {
                 Text(project.unwrappedName)
                     .fontWeight(.semibold)
-                Text("\(images.count) Items")
+                Text("^[\(images.count) Item](inflect:true)")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

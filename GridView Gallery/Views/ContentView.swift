@@ -41,9 +41,6 @@ struct ContentView: View {
                     db.removeImageItems(db.images)
                 }
             }
-            ToolbarItem {
-                EditButton()
-            }
         }
         .navigationTitle("Home")
         .sheet(isPresented: $showAddImage) {

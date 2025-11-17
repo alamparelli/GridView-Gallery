@@ -6,7 +6,7 @@ import SwiftUI
 
 struct AddImageView: View {
     @Environment(DatabaseService.self) var db
-    @State private var project = ""
+    @State private var project: Project?
     @State private var tags: [Tag] = []
     @State private var description = ""
     @State private var selectedImages: [ImageItem] = []
@@ -15,7 +15,7 @@ struct AddImageView: View {
     
     var body: some View {
         NavigationStack {
-            VStack {
+            Form {
                 VStack (alignment: .leading) {
                     HStack {
                         if selectedImages.isEmpty {
@@ -57,26 +57,32 @@ struct AddImageView: View {
                             .stroke(.accent, lineWidth: 1)
                     }
                 }
-                
-                Picker("Select Project", selection: $project) {
-                    ForEach(db.projects) { project in
-                        Text(project.unwrappedName)
+
+                if !db.projects.isEmpty {
+                    Picker(selection: $project) {
+                        Text("None")
+                            .tag(nil as Project?)
+                        ForEach(db.projects.sorted()) { project in
+                            Text(project.unwrappedName)
+                                .tag(project as Project?)
+                        }
+                    } label: {
+                        Text("Choose a Project")
+                    }
+                    .pickerStyle(.navigationLink)
+                    .font(.subheadline)
+                    .padding()
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(.accent, lineWidth: 1)
                     }
                 }
-                .pickerStyle(.navigationLink)
-                .font(.subheadline)
-                .padding()
-                .overlay {
-                    RoundedRectangle(cornerRadius: 10)
-                        .stroke(.accent, lineWidth: 1)
-                }
-                
+
                 VStack (alignment: .leading) {
                     Text("Tags")
                         .fontWeight(.semibold)
                     
-                    FlowLayout(mode: .scrollable, items: ["Short", "Items", "Here", "And", "A", "Few", "More",
-                                                          "And then a very very very long one"], itemSpacing: 4) {
+                    FlowLayout(mode: .scrollable, items: ["#Short", "#Items", "#Here", "#And", "#A"], itemSpacing: 4) {
                         Text($0)
                             .font(.subheadline)
                             .padding(.horizontal, 8)
@@ -106,7 +112,6 @@ struct AddImageView: View {
                             .stroke(.accent, lineWidth: 1)
                     }
                 }
-                
             }
             .padding()
             .navigationTitle("Add Image")
@@ -122,8 +127,7 @@ struct AddImageView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button{
-                        db.addProject(Project(name: project))
-                        dismiss()
+                        addImage()
                     } label: {
                         Image(systemName: "square.and.arrow.down")
                             .foregroundStyle(.accent)
@@ -132,7 +136,28 @@ struct AddImageView: View {
                     .buttonStyle(.borderedProminent)
                 }
             }
+            .formStyle(.columns)
         }
+    }
+    
+    func addImage() {
+        for img in selectedImages {
+            if !description.isEmpty {
+                img.fulldescription = description
+            }
+            
+            if !tags.isEmpty {
+                img.tags = tags
+            }
+            
+            if let prj = project {
+                img.project = prj
+            }
+            
+            db.addImageItem(img)
+        }
+        
+        dismiss()
     }
 }
 
