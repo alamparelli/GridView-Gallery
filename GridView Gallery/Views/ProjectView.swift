@@ -6,12 +6,13 @@ import SwiftUI
 
 struct ProjectView: View {
     @Environment(DatabaseService.self) var db
+
     var project: Project
     
     var body: some View {
         if db.projectImages(project).isEmpty {
             ContentUnavailableView {
-                PhotoPickerView()
+                //
             } description: {
                 Text("Nothing to Show yet")
             }

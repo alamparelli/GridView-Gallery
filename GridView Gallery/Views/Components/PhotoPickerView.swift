@@ -7,11 +7,14 @@ import PhotosUI
 
 struct PhotoPickerView: View {
     @State private var pickerItems: [PhotosPickerItem] = []
-    @Environment(DatabaseService.self) var db
+    @Binding var selectedImages: [ImageItem]
     
     var body: some View {
-        PhotosPicker(selection: $pickerItems, maxSelectionCount: 6, matching: .images , preferredItemEncoding: .compatible ) {
-            Label("Add a photo", systemImage: "photo.badge.plus")
+        PhotosPicker(selection: $pickerItems, maxSelectionCount: 5, matching: .images , preferredItemEncoding: .compatible ) {
+            Label("Add a photo", systemImage: "photo.on.rectangle")
+                .labelStyle(.iconOnly)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .contentShape(Rectangle())
         }
         .onChange(of: pickerItems) {
             Task {
@@ -21,7 +24,7 @@ struct PhotoPickerView: View {
                         if let uiImage = UIImage(data: data) {
                             if let imageDisk = uiImage.jpegData(compressionQuality: 0.5) {
                                 let image = ImageItem(imageData: imageDisk)
-                                db.addImageItem(image)
+                                selectedImages.append(image)
                             }
                         }
                     }
@@ -31,7 +34,7 @@ struct PhotoPickerView: View {
         }
     }
 }
-
-#Preview {
-    PhotoPickerView()
-}
+//
+//#Preview {
+//    PhotoPickerView()
+//}

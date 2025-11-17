@@ -9,12 +9,17 @@ struct ContentView: View {
     @Environment(DatabaseService.self) var db
     
     @State private var showPicker = false
+    @State private var showAddImage = false
     
     var body: some View {
         VStack {
             if db.images.isEmpty {
                 ContentUnavailableView {
-                    PhotoPickerView()
+                    Button {
+                        showAddImage = true
+                    } label: {
+                        Label("Add a photo", systemImage: "photo.badge.plus")
+                    }
                 } description: {
                     Text("Nothing to Show yet")
                 }
@@ -24,7 +29,12 @@ struct ContentView: View {
         }
         .toolbar {
             ToolbarItem {
-                PhotoPickerView()
+//                PhotoPickerView()
+                Button {
+                    showAddImage = true
+                } label: {
+                    Label("Add a photo", systemImage: "photo.badge.plus")
+                }
             }
             ToolbarItem {
                 Button("Delete") {
@@ -36,6 +46,9 @@ struct ContentView: View {
             }
         }
         .navigationTitle("Home")
+        .sheet(isPresented: $showAddImage) {
+            AddImageView()
+        }
     }
 }
 

@@ -29,6 +29,7 @@ struct AddProjectView: View {
                         dismiss()
                     } label: {
                         Image(systemName: "xmark")
+                            .foregroundStyle(.accent)
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
@@ -37,8 +38,9 @@ struct AddProjectView: View {
                         dismiss()
                     } label: {
                         Image(systemName: "square.and.arrow.down")
+                            .foregroundStyle(.accent)
                     }
-                    .tint(.accent)
+                    .tint(.accentColorInverted)
                     .buttonStyle(.borderedProminent)
                 }
             }
