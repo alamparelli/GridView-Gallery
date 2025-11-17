@@ -6,9 +6,9 @@ import SwiftData
 
 @Model
 class Project {
-    var name: String
+    var name: String?
         
-    init(name: String) {
+    init(name: String? = nil) {
         self.name = name
     }
 }

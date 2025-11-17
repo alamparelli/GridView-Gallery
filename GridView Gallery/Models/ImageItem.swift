@@ -9,14 +9,14 @@ import SwiftData
 class ImageItem {
     @Attribute(.externalStorage) var imageData: Data
     var fulldescription: String?
-    var projects: [Project]?
+    var project: Project
     var tags: [Tag]?
     var createdAt: Date
     
-    init(imageData: Data, fulldescription: String? = nil, projects: [Project]? = nil, tags: [Tag]? = nil, createdAt: Date = Date()) {
+    init(imageData: Data, fulldescription: String? = nil, project: Project = Project(), tags: [Tag]? = nil, createdAt: Date = Date()) {
         self.imageData = imageData
         self.fulldescription = fulldescription
-        self.projects = projects
+        self.project = project
         self.tags = tags
         self.createdAt = createdAt
     }

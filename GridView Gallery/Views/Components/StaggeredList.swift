@@ -8,13 +8,17 @@ struct StaggeredList: View {
     let columns: Int = 2
     var images: [ImageItem] = []
         
+    var sortedImages: [ImageItem] {
+        images.sorted(by: { $0.createdAt > $1.createdAt })
+    }
+    
     var splitArray: [[ImageItem]] {
         var result: [[ImageItem]] = []
         
         var list1: [ImageItem] = []
         var list2: [ImageItem] = []
         
-        images.forEach { image in
+        sortedImages.forEach { image in
             let index = images.firstIndex {$0.id == image.id }
             
             if let index = index {
@@ -48,7 +52,6 @@ struct StaggeredList: View {
             .padding()
         }
         .animation(.default, value: images)
-        .scrollBounceBehavior(.basedOnSize)
         .scrollIndicators(.never)
     }
 }

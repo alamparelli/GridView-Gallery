@@ -14,6 +14,19 @@ class DatabaseService {
     var tags: [Tag] = []
     var projects: [Project] = []
     
+    func projectImages(_ project: Project) -> [ImageItem] {
+        let pName = project.name
+        let descriptor = FetchDescriptor<ImageItem>(predicate: #Predicate { $0.project.name == pName})
+        var data: [ImageItem] = []
+        
+        do {
+            data = try context.fetch(descriptor)
+        } catch {
+            print("Error fetching notes: \(error)")
+        }
+        return data
+    }
+    
     init(context: ModelContext) {
         self.context = context
         
