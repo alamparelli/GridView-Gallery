@@ -14,17 +14,31 @@ struct ProjectsView: View {
     ]
     
     var body: some View {
-        ScrollView {
-            LazyVGrid(columns: columns) {
-                ForEach(db.projects.sorted()) { project in
-                    ProjectSquareView(project: project, images: db.projectImages(project))
+        VStack {
+            if db.projects.isEmpty {
+                ContentUnavailableView {
+                    Button {
+                        showAddProject = true
+                    } label: {
+                        Label("Add a project", systemImage: "plus.rectangle.on.folder")
+                    }
+                } description: {
+                    Text("Nothing to Show yet")
                 }
+            } else {
+                ScrollView {
+                    LazyVGrid(columns: columns) {
+                        ForEach(db.projects.sorted()) { project in
+                            ProjectSquareView(project: project, images: db.projectImages(project))
+                        }
+                    }
+                    .padding()
+                }
+                .animation(.default, value: db.projects)
+                .scrollBounceBehavior(.basedOnSize)
+                .scrollIndicators(.never)
             }
-            .padding()
         }
-        .animation(.default, value: db.projects)
-        .scrollBounceBehavior(.basedOnSize)
-        .scrollIndicators(.never)
         .navigationTitle("Projects")
         .navigationBarTitleDisplayMode(.automatic)
         .toolbar {
