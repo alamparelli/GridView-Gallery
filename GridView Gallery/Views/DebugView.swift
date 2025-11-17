@@ -21,14 +21,14 @@ struct DebugView: View {
         TabView(selection: $selectedImageID) {
             ForEach(images) { image in
                 ScrollView {
-                    if let uiImage = UIImage(data: image.imageData) {
-                        if let thumbnail = uiImage.preparingThumbnail(of: CGSize(width: uiImage.size.width / 2, height: uiImage.size.height / 2)) {
-                            Image(uiImage: thumbnail)
+                    if let uiImage = UIImage(data: image.thumbnailData) {
+//                        if let thumbnail = uiImage.preparingThumbnail(of: CGSize(width: uiImage.size.width / 2, height: uiImage.size.height / 2)) {
+                            Image(uiImage: uiImage)
                                 .resizable()
                                 .scaledToFill()
                                 .frame(maxWidth: 400, maxHeight: 700)
                                 .clipped()
-                        }
+//                        }
                     }
                     
                     Section {

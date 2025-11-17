@@ -9,7 +9,7 @@ import SwiftUI
 @Model
 class ImageItem {
     @Attribute(.externalStorage) var imageData: Data
-    @Attribute(.externalStorage) var thumbnailData: Data? 
+    @Attribute(.externalStorage) var thumbnailData: Data
     var fulldescription: String?
     @Relationship(deleteRule: .nullify) var project: Project?
     var tags: [Tag]?
@@ -21,7 +21,7 @@ class ImageItem {
         self.tags = tags
         self.createdAt = createdAt
         
-        self.thumbnailData = Self.generateThumbnail(from: imageData)
+        self.thumbnailData = Self.generateThumbnail(from: imageData)!
     }
     
     var uiImage: UIImage? {

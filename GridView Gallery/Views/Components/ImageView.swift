@@ -11,12 +11,12 @@ struct ImageView: View {
     @State private var openDetails: Bool = false
     
     var body: some View {
-        if let thumbnailData = image.thumbnailData, let uiImage = UIImage(data: thumbnailData), let thumbnail = uiImage.preparingThumbnail(of: CGSize(width: uiImage.size.width / 2, height: uiImage.size.height / 2)) {
+        if let uiImage = UIImage(data: image.thumbnailData) {
             Button {
 //                ns.navigate(to: Destination.imageDetails(image))
 //                ns.navigate(to: Destination.debug(image, db.images))
                 openDetails = true
-            } label: {Image(uiImage: thumbnail)
+            } label: {Image(uiImage: uiImage)
                     .resizable()
                     .scaledToFit()
                     .clipped()
