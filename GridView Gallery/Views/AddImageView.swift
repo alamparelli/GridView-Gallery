@@ -15,6 +15,30 @@ struct AddImageView: View {
     
     var body: some View {
         NavigationStack {
+            ScrollView {
+            if !selectedImages.isEmpty {
+            // Need to be rewritten to show all images in a stack of Photos and not one on the side of each Other
+                ScrollView(.horizontal) {
+                    LazyHStack(spacing: 1) {
+                        ForEach(selectedImages) { ph in
+                            if let uiImage = UIImage(data: ph.imageData) {
+                                if let thumbnail = uiImage.preparingThumbnail(of: CGSize(width: uiImage.size.width / 2, height: uiImage.size.height / 2)) {
+                                    Image(uiImage: thumbnail)
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(maxWidth: 400)
+                                        .clipped()
+                                }
+                            }
+                        }
+                    }
+                    .frame(height: 400)
+                }
+                .scrollDisabled(selectedImages.count == 1)
+                .scrollIndicators(.never)
+                .scrollBounceBehavior(.basedOnSize)
+                .padding(.bottom)
+            }
             Form {
                 if selectedImages.isEmpty {
                     VStack (alignment: .leading) {
@@ -46,25 +70,8 @@ struct AddImageView: View {
                                 .stroke(.accent, lineWidth: 1)
                         }
                     }
-                } else {
-                    // Need to be rewritten to show all images in a stack of Photos and not one on the side of each Other
-                    HStack {
-                        ForEach(selectedImages, id: \.self) { image in
-                            if let uiImg = image.uiImage, let thumbnail = uiImg.preparingThumbnail(of: CGSize(width: uiImg.size.width / 4, height: uiImg.size.height / 4 )) {
-                                Image(uiImage: thumbnail)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(height: 100)
-                            }
-                        }
-                    }
-                    .ignoresSafeArea(edges: .top)
-//                    .overlay {
-//                        RoundedRectangle(cornerRadius: 10)
-//                            .stroke(.accent, lineWidth: 1)
-//                    }
+                    .padding(.top, 100)
                 }
-
                 if !db.projects.isEmpty {
                     Picker(selection: $project) {
                         Text("None")
@@ -120,7 +127,7 @@ struct AddImageView: View {
                     }
                 }
             }
-            .padding()
+            .padding(.horizontal)
             .navigationTitle("Add Image")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -144,6 +151,15 @@ struct AddImageView: View {
                 }
             }
             .formStyle(.columns)
+            }
+            .scrollIndicators(.never)
+            .ignoresSafeArea(edges: .top)
+        }
+        .onAppear {
+            UIScrollView.appearance().bounces = false
+        }
+        .onDisappear {
+            UIScrollView.appearance().bounces = true
         }
     }
     

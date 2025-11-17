@@ -9,14 +9,22 @@ struct ImageDetailView: View {
     
     var body: some View {
         ScrollView {
-            if let thumbnailData = image.thumbnailData, let uiImage = UIImage(data: thumbnailData){
-                Image(uiImage: uiImage)
-                        .resizable()
-                        .scaledToFit()
-//                        .clipped()
+            if let uiImage = UIImage(data: image.imageData),
+               let thumbnail = uiImage.preparingThumbnail(of: CGSize(width: uiImage.size.width / 2, height: uiImage.size.height / 2)) {
+                Image(uiImage: thumbnail)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: 400)
+                    .clipped()
             }
         }
         .ignoresSafeArea(edges: .top)
+        .onAppear {
+            UIScrollView.appearance().bounces = false
+        }
+        .onDisappear {
+            UIScrollView.appearance().bounces = true
+        }
     }
 }
 

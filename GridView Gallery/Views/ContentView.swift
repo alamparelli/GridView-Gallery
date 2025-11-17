@@ -10,6 +10,7 @@ struct ContentView: View {
     
     @State private var showPicker = false
     @State private var showAddImage = false
+    @State private var showDebug = false
     
     var body: some View {
         VStack {
@@ -41,11 +42,19 @@ struct ContentView: View {
                     db.removeImageItems(db.images)
                 }
             }
+            ToolbarItem {
+                Button("Debug") {
+                    showDebug = true
+                }
+            }
         }
         .navigationTitle("Home")
         .sheet(isPresented: $showAddImage) {
             AddImageView()
         }
+//        .sheet(isPresented: $showDebug) {
+//            DebugView(image: image, images: db.images)
+//        }
     }
 }
 
