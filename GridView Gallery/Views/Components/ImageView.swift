@@ -7,7 +7,7 @@ struct ImageView: View {
     var image: Data
     
     var body: some View {
-        if let uiImage = UIImage(data: image), let thumbnail = uiImage.preparingThumbnail(of: CGSize(width: uiImage.size.width, height: uiImage.size.height)) {
+        if let uiImage = UIImage(data: image), let thumbnail = uiImage.preparingThumbnail(of: CGSize(width: uiImage.size.width / 2, height: uiImage.size.height / 2)) {
             Image(uiImage: thumbnail)
                 .resizable()
                 .scaledToFit()

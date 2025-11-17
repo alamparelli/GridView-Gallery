@@ -7,8 +7,8 @@ import SwiftUI
 struct StaggeredList: View {
     let columns: Int = 2
     var images: [ImageItem] = []
-        
-    var sortedImages: [ImageItem] {
+    
+    private var sortedImages: [ImageItem] {
         images.sorted(by: { $0.createdAt > $1.createdAt })
     }
     
@@ -18,17 +18,25 @@ struct StaggeredList: View {
         var list1: [ImageItem] = []
         var list2: [ImageItem] = []
         
-        sortedImages.forEach { image in
-            let index = images.firstIndex {$0.id == image.id }
-            
-            if let index = index {
-                if index % 2 == 0  {
-                    list1.append(image)
-                } else {
-                    list2.append(image)
-                }
+        for (index, image) in sortedImages.enumerated() {
+            if index % 2 == 0 {
+                list1.append(image)
+            } else {
+                list2.append(image)
             }
         }
+        
+//        sortedImages.forEach { image in
+//            let index = images.firstIndex {$0.id == image.id }
+//            
+//            if let index = index {
+//                if index % 2 == 0  {
+//                    list1.append(image)
+//                } else {
+//                    list2.append(image)
+//                }
+//            }
+//        }
         result.append(list1)
         result.append(list2)
         return result
@@ -38,20 +46,26 @@ struct StaggeredList: View {
         ScrollView {
             HStack(alignment: .top) {
                 LazyVStack(spacing: 8) {
-                    ForEach(splitArray[0], id: \.self) { item in
-                        ImageView(image: item.imageData)
+                    ForEach(splitArray[0]) { item in
+                        if let thumbnailData = item.thumbnailData {
+                            ImageView(image: thumbnailData)
+                                .id(item.id)
+                        }
                     }
                 }
                 
                 LazyVStack(spacing: 8) {
-                    ForEach(splitArray[1], id: \.self) { item in
-                        ImageView(image: item.imageData)
+                    ForEach(splitArray[1]) { item in
+                        if let thumbnailData = item.thumbnailData {
+                            ImageView(image: thumbnailData)
+                                .id(item.id)
+                        }
                     }
                 }
             }
             .padding()
         }
-        .animation(.default, value: images)
+        .animation(.default, value: images.count)
         .scrollIndicators(.never)
     }
 }

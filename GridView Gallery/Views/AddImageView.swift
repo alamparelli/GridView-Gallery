@@ -30,7 +30,7 @@ struct AddImageView: View {
                         } else {
                             // Need to be rewritten to show all images in a stack of Photos and not one on the side of each Other
                             ForEach(selectedImages, id: \.self) { image in
-                                if let uiImg = image.uiImage, let thumbnail = uiImg.preparingThumbnail(of: uiImg.size) {
+                                if let uiImg = image.uiImage, let thumbnail = uiImg.preparingThumbnail(of: CGSize(width: uiImg.size.width / 4, height: uiImg.size.height / 4 )) {
                                     Image(uiImage: thumbnail)
                                         .resizable()
                                         .scaledToFit()
@@ -43,12 +43,16 @@ struct AddImageView: View {
                                     .stroke(.accent, lineWidth: 1)
                             }
                         }
-                        Image(systemName: "camera")
-                            .frame(maxWidth: .infinity, minHeight: 100)
-                            .overlay {
-                                RoundedRectangle(cornerRadius: 10)
-                                    .stroke(.accent, lineWidth: 1)
-                            }
+                        Button{
+                            // Picture
+                        } label: {
+                            Image(systemName: "camera")
+                                .frame(maxWidth: .infinity, minHeight: 100)
+                                .overlay {
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .stroke(.accent, lineWidth: 1)
+                                }
+                        }
                     }
                     .padding()
                     .frame(maxWidth: .infinity, minHeight: 100)

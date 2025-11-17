@@ -9,12 +9,11 @@ struct ImageItemView: View {
     var images: [ImageItem]
     
     var body: some View {
-        if let image = images[index].uiImage?.preparingThumbnail(of: images[index].uiImage!.size) {
+        if let image = images[index].uiImage?.preparingThumbnail(of: CGSize(width: images[index].uiImage!.size.width / 2, height: images[index].uiImage!.size.height / 2)) {
             Image(uiImage: image )
                 .resizable()
                 .scaledToFill()
                 .clipped()
-            
         }
     }
 }
@@ -46,7 +45,7 @@ struct ProjectSquareView: View {
                     HStack (spacing: 0) {
                         ImageItemView(index: 0, images: images)
                     }
-                    .frame(width: 180)
+                    .frame(width: 180, height: 173)
                     .cornerRadius(10)
                 case 2:
                     HStack (spacing: 0) {
@@ -59,7 +58,7 @@ struct ProjectSquareView: View {
 
                         }
                     }
-                    .frame(width: 180)
+                    .frame(width: 180, height: 173)
                     .cornerRadius(10)
                 default:
                     HStack (spacing: 0) {
@@ -72,7 +71,7 @@ struct ProjectSquareView: View {
                         ImageItemView(index: 2, images: images)
 
                     }
-                    .frame(width: 180)
+                    .frame(width: 180, height: 173)
                     .cornerRadius(10)
                 }
             }
