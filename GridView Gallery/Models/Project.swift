@@ -5,10 +5,18 @@ import Foundation
 import SwiftData
 
 @Model
-class Project {
+class Project: Comparable {
     var name: String?
         
+    var unwrappedName: String {
+        name ?? "Unknown"
+    }
+    
     init(name: String? = nil) {
         self.name = name
+    }
+
+    public static func < (lhs: Project, rhs: Project) -> Bool {
+        return lhs.unwrappedName < rhs.unwrappedName
     }
 }

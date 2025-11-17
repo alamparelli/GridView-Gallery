@@ -4,6 +4,7 @@
 
 import Foundation
 import SwiftData
+import SwiftUI
 
 @Model
 class ImageItem {
@@ -19,5 +20,9 @@ class ImageItem {
         self.project = project
         self.tags = tags
         self.createdAt = createdAt
+    }
+    
+    var uiImage: UIImage? {
+        UIImage(data: imageData)
     }
 }
