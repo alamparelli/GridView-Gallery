@@ -26,7 +26,7 @@ struct DebugView: View {
                             Image(uiImage: uiImage)
                                 .resizable()
                                 .scaledToFill()
-                                .frame(maxWidth: 400, maxHeight: 700)
+                                .frame(maxWidth: 600, maxHeight: 700)
                                 .clipped()
 //                        }
                     }
