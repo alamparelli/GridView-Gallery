@@ -47,19 +47,16 @@ struct StaggeredList: View {
             HStack(alignment: .top) {
                 LazyVStack(spacing: 8) {
                     ForEach(splitArray[0]) { item in
-                        if let thumbnailData = item.thumbnailData {
-                            ImageView(image: thumbnailData)
-                                .id(item.id)
-                        }
+                        ImageView(image: item)
+                            .id(item.id)
+
                     }
                 }
                 
                 LazyVStack(spacing: 8) {
                     ForEach(splitArray[1]) { item in
-                        if let thumbnailData = item.thumbnailData {
-                            ImageView(image: thumbnailData)
-                                .id(item.id)
-                        }
+                        ImageView(image: item)
+                            .id(item.id)
                     }
                 }
             }

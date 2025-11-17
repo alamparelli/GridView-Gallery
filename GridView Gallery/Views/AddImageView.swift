@@ -16,9 +16,9 @@ struct AddImageView: View {
     var body: some View {
         NavigationStack {
             Form {
-                VStack (alignment: .leading) {
-                    HStack {
-                        if selectedImages.isEmpty {
+                if selectedImages.isEmpty {
+                    VStack (alignment: .leading) {
+                        HStack {
                             PhotoPickerView(selectedImages: $selectedImages)
                                 .frame(maxWidth: .infinity, minHeight: 100, maxHeight: 100)
                                 .overlay {
@@ -26,40 +26,43 @@ struct AddImageView: View {
                                         .stroke(.accent, lineWidth: 1)
                                 }
                                 .contentShape(Rectangle())
-
-                        } else {
-                            // Need to be rewritten to show all images in a stack of Photos and not one on the side of each Other
-                            ForEach(selectedImages, id: \.self) { image in
-                                if let uiImg = image.uiImage, let thumbnail = uiImg.preparingThumbnail(of: CGSize(width: uiImg.size.width / 4, height: uiImg.size.height / 4 )) {
-                                    Image(uiImage: thumbnail)
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(height: 100)
-                                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                                }
+                            
+                            Button{
+                                // Picture
+                            } label: {
+                                Image(systemName: "camera")
+                                    .frame(maxWidth: .infinity, minHeight: 100)
+                                    .overlay {
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .stroke(.accent, lineWidth: 1)
+                                    }
                             }
-                            .overlay {
-                                RoundedRectangle(cornerRadius: 10)
-                                    .stroke(.accent, lineWidth: 1)
-                            }
+                            
                         }
-                        Button{
-                            // Picture
-                        } label: {
-                            Image(systemName: "camera")
-                                .frame(maxWidth: .infinity, minHeight: 100)
-                                .overlay {
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .stroke(.accent, lineWidth: 1)
-                                }
+                        .padding()
+                        .frame(maxWidth: .infinity, minHeight: 100)
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(.accent, lineWidth: 1)
                         }
                     }
-                    .padding()
-                    .frame(maxWidth: .infinity, minHeight: 100)
-                    .overlay {
-                        RoundedRectangle(cornerRadius: 10)
-                            .stroke(.accent, lineWidth: 1)
+                } else {
+                    // Need to be rewritten to show all images in a stack of Photos and not one on the side of each Other
+                    HStack {
+                        ForEach(selectedImages, id: \.self) { image in
+                            if let uiImg = image.uiImage, let thumbnail = uiImg.preparingThumbnail(of: CGSize(width: uiImg.size.width / 4, height: uiImg.size.height / 4 )) {
+                                Image(uiImage: thumbnail)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: 100)
+                            }
+                        }
                     }
+                    .ignoresSafeArea(edges: .top)
+//                    .overlay {
+//                        RoundedRectangle(cornerRadius: 10)
+//                            .stroke(.accent, lineWidth: 1)
+//                    }
                 }
 
                 if !db.projects.isEmpty {
