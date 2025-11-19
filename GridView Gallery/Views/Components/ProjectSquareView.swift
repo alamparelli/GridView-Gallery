@@ -7,12 +7,15 @@ import SwiftUI
 struct ImageItemView: View {
     var index: Int = 0
     var images: [ImageItem]
+    var width: CGFloat
+    var height: CGFloat
     
     var body: some View {
-        if let image = images[index].uiImage?.preparingThumbnail(of: CGSize(width: images[index].uiImage!.size.width / 2, height: images[index].uiImage!.size.height / 2)) {
+        if let image = images[index].thumbnailImage {
             Image(uiImage: image )
                 .resizable()
                 .scaledToFill()
+                .frame(width: width, height: height)
                 .clipped()
         }
     }
@@ -43,18 +46,18 @@ struct ProjectSquareView: View {
                 switch id {
                 case 1:
                     HStack (spacing: 0) {
-                        ImageItemView(index: 0, images: images)
+                        ImageItemView(index: 0, images: images, width: 180, height: 173)
                     }
                     .frame(width: 180, height: 173)
                     .cornerRadius(10)
                 case 2:
                     HStack (spacing: 0) {
-                        ImageItemView(index: 0, images: images)
+                        ImageItemView(index: 0, images: images, width: 90, height: 173)
 
                         VStack (spacing: 0) {
-                            ImageItemView(index: 1, images: images)
+                            ImageItemView(index: 1, images: images, width: 90, height: 86.5)
 
-                            ImageItemView(index: 2, images: images)
+                            ImageItemView(index: 2, images: images, width: 90, height: 86.5)
 
                         }
                     }
@@ -63,12 +66,12 @@ struct ProjectSquareView: View {
                 default:
                     HStack (spacing: 0) {
                         VStack (spacing: 0) {
-                            ImageItemView(index: 0, images: images)
+                            ImageItemView(index: 0, images: images, width: 90, height: 86.5)
 
-                            ImageItemView(index: 1, images: images)
+                            ImageItemView(index: 1, images: images, width: 90, height: 86.5)
 
                         }
-                        ImageItemView(index: 2, images: images)
+                        ImageItemView(index: 2, images: images, width: 90, height: 173)
 
                     }
                     .frame(width: 180, height: 173)
