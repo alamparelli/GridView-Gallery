@@ -15,7 +15,6 @@ struct AddDetailsImageView: View {
             if !db.projects.isEmpty {
                 Picker(selection: $project) {
                     Text("None")
-                        .foregroundStyle(.accent)
                         .tag(nil as Project?)
                     ForEach(db.projects.sorted()) { project in
                         Text(project.unwrappedName)
@@ -23,6 +22,7 @@ struct AddDetailsImageView: View {
                     }
                 } label: {
                     Text("Choose a Project")
+                        .foregroundStyle(.strokeBorder)
                 }
                 .pickerStyle(.navigationLink)
                 .font(.subheadline)
