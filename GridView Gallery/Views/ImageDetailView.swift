@@ -117,6 +117,7 @@ struct ImageDetailView: View {
                                             .scaledToFill()
                                             .frame(maxWidth: 600, maxHeight: 250)
                                             .clipped()
+                                            .contentShape(Rectangle())
                                             .gesture(fullScreenGesture)
                                     }
                                     
@@ -204,7 +205,6 @@ struct ImageDetailView: View {
                     selectedImage = image
                 }
             }
-
             .onDisappear {
                 UIScrollView.appearance().bounces = true
             }
@@ -232,6 +232,7 @@ struct ImageDetailView: View {
     }
     
     func doWork() {
+        // BUG
         if showEditDetails {
             showEditDetails = false
             
