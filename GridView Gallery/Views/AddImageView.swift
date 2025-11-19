@@ -14,7 +14,6 @@ struct AddImageView: View {
     @State private var description = ""
     @State private var selectedImages: [ImageItem] = []
     @State private var pickerItems: [PhotosPickerItem] = []
-    @State private var isLoadingImages: Bool = false
     
     @Environment(\.dismiss) var dismiss
     
@@ -75,12 +74,11 @@ struct AddImageView: View {
                                                 .frame(width: 150, height: 100)
                                                 .clipped()
                                                 .clipShape(.rect(cornerRadius: 10))
-                                                .offset(x: offset * Double(element) - 10)
+                                                .offset(x: offset * Double(element) - 5)
 //                                                .rotationEffect(Angle(degrees: offset * Double(element) / 3 - 10))
                                         }
                                     }
                                 }
-                                .redacted(reason: isLoadingImages ? .placeholder : [])
                             }
                             
                             Spacer()
@@ -120,7 +118,6 @@ struct AddImageView: View {
         }
         .onChange(of: pickerItems) {
             Task {
-                isLoadingImages = true
                 selectedImages = []
                 for item in pickerItems {
                     if let data = try await item.loadTransferable(type: Data.self) {
@@ -133,7 +130,6 @@ struct AddImageView: View {
                         }
                     }
                 }
-                isLoadingImages = false
             }
         }
         .onAppear {
