@@ -74,7 +74,7 @@ struct ContentView: View {
                     }
                 }
                 ToolbarItem {
-                    Button("Delete", systemImage: "arrow.forward.folder", role: .destructive) {
+                    Button("Move", systemImage: "arrow.forward.folder", role: .destructive) {
                         showMoveView = true
                     }
                 }
