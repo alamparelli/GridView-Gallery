@@ -75,7 +75,8 @@ class DatabaseService {
     }
     
     func editImageItem() {
-        
+        self.save()
+        self.refreshImages()
     }
     
     func removeImageItem(_ imageItem: ImageItem) {
@@ -116,7 +117,8 @@ class DatabaseService {
     }
     
     func editProject() {
-        
+        self.save()
+        self.refreshProjects()
     }
     
     func removeProject(_ project: Project) {

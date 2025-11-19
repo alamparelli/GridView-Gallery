@@ -8,11 +8,20 @@ struct AddProjectView: View {
     @Environment(DatabaseService.self) var db
     @State private var project = ""
     @Environment(\.dismiss) var dismiss
-    
+    @FocusState private var isFocused: Bool
+        
     var body: some View {
         NavigationStack {
             VStack {
                 TextField("Project Name", text: $project)
+                    .focused($isFocused)
+                    .onAppear {
+                        isFocused.toggle()
+                    }
+                    .onSubmit {
+                        db.addProject(Project(name: project))
+                        dismiss()
+                    }
                     .padding()
                     .overlay {
                         RoundedRectangle(cornerRadius: 10)

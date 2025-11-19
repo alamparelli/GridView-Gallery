@@ -6,10 +6,11 @@ import SwiftUI
 enum Destination: Hashable {
     case gallery
     case projects
+    case project(Project)
     case settings
     case search
-    case debug(ImageItem, [ImageItem])
-    case imageDetails(ImageItem)
+    case debug
+    case imageDetails(ImageItem, [ImageItem])
     
     // fill other depending your needs
 }
@@ -21,18 +22,13 @@ class NavigationService {
     @ViewBuilder
     func returnView(_ destination : Destination) -> some View {
         switch destination {
-        case .gallery:
-            ContentView()
-        case .projects:
-            ProjectsView()
-        case .settings:
-            SettingsView()
-        case .search:
-            SearchView()
-        case .debug(let image, let images):
-            DebugView(image: image, images: images)
-        case .imageDetails(let image):
-            ImageDetailView(image: image)
+        case .gallery: ContentView()
+        case .projects: ProjectsView()
+        case . project(let project) : ProjectView(project: project)
+        case .settings: SettingsView()
+        case .search: SearchView()
+        case .debug: DebugView()
+        case .imageDetails(let image, let images): ImageDetailView(image: image, images: images)
         }
     }
     

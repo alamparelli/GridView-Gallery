@@ -42,11 +42,13 @@ struct ContentView: View {
                     db.removeImageItems(db.images)
                 }
             }
+            #if DEBUG
             ToolbarItem {
                 Button("Debug") {
                     showDebug = true
                 }
             }
+            #endif
         }
         .navigationTitle("Home")
         .sheet(isPresented: $showAddImage) {

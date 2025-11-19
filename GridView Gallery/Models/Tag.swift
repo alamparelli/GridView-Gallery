@@ -6,7 +6,7 @@ import Foundation
 import SwiftData
 
 @Model
-class Tag {
+class Tag{
     var name: String
     
     init(name: String) {

@@ -7,6 +7,7 @@ import SwiftUI
 struct ProjectsView: View {
     @State private var showAddProject: Bool = false
     @Environment(DatabaseService.self) var db
+    @Environment(NavigationService.self) var ns
     
     let columns: [GridItem] = [
         GridItem(.flexible()),
@@ -31,6 +32,9 @@ struct ProjectsView: View {
                         ForEach(db.projects.sorted()) { project in
                             if let images = project.images {
                                 ProjectSquareView(project: project, images: images)
+                                    .onTapGesture {
+                                        ns.navigate(to: Destination.project(project))
+                                    }
                             }
                         }
                     }
