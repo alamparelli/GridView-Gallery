@@ -17,11 +17,24 @@ class DatabaseService {
     // Editbutton
     var selectedImagesWhenEditingList = Set<ImageItem>()
     var isEditing = false
+    var resetSelectedItems = false
+    var projectToUpdate: Project?
     
     init(context: ModelContext) {
         self.context = context
-        
         self.refreshAll()
+    }
+    
+    func updateProjectImage() {
+        if let pr = self.projectToUpdate {
+            for image in selectedImagesWhenEditingList {
+                image.project = pr
+            }
+        }
+
+        self.refreshImages()
+        self.refreshProjects()
+        self.resetSelectedItems = true
     }
     
     func resetSelectedImagesWhenEditingList() {
@@ -121,6 +134,9 @@ class DatabaseService {
     
     func addProject(_ project: Project) {
         context.insert(project)
+        
+        self.projectToUpdate = project // needed for moving functionality
+        
         self.save()
         self.refreshProjects()
     }

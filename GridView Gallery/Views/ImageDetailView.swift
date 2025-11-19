@@ -160,7 +160,8 @@ struct ImageDetailView: View {
                             Button {
                                 showEditDetails ? showEditDetails = false : dismiss()
                             } label: {
-                                Image(systemName: "xmark")
+                                Label("Close", systemImage:  "xmark")
+                                    .labelStyle(.iconOnly)
                                     .foregroundStyle(.accent)
                                     .padding(12)
                                     .glassEffect()
@@ -172,7 +173,8 @@ struct ImageDetailView: View {
                             Button {
                                 doWork()
                             } label: {
-                                Image(systemName: showEditDetails ? "square.and.arrow.down" : "pencil")
+                                Label(showEditDetails ? "Done" : "Edit" , systemImage: showEditDetails ? "square.and.arrow.down" : "pencil")
+                                    .labelStyle(.iconOnly)
                                     .foregroundStyle(.accent)
                                     .padding(12)
                                     .background(.accentColorInverted)

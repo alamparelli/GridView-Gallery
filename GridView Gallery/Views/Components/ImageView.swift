@@ -8,8 +8,8 @@ struct SelectionView: View {
     
     var body: some View {
         Circle()
-            .fill(isSelected ? Color.accent : Color.clear)
-            .stroke(.strokeBorder, lineWidth: 1 )
+            .fill(isSelected ? Color.accent : Color.white.opacity(0.3))
+            .stroke(.white, lineWidth: 2 )
             .frame(width: 20, height: 20)
     }
 }
@@ -43,7 +43,12 @@ struct ImageView: View {
                 }
             }
             .onChange(of: db.isEditing) {
-                if !db.isEditing {
+                if !db.isEditing{
+                    isSelected = false
+                }
+            }
+            .onChange(of: db.resetSelectedItems) {
+                if db.resetSelectedItems {
                     isSelected = false
                 }
             }
@@ -62,6 +67,7 @@ struct ImageView: View {
                 } else {
                     isSelected = true
                     db.selectedImagesWhenEditingList.insert(image)
+                    db.resetSelectedItems = false
                 }
                 showSelection = true
             }

@@ -46,6 +46,7 @@ struct ProjectView: View {
                     showAddImage = true
                 } label: {
                     Label("Add a photo", systemImage: "photo.badge.plus")
+                        .labelStyle(.iconOnly)
                 }
             }
             ToolbarSpacer(.flexible, placement: .bottomBar)

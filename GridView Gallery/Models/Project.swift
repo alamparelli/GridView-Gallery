@@ -18,6 +18,15 @@ class Project: Comparable {
     }
 
     public static func < (lhs: Project, rhs: Project) -> Bool {
+        let lhsHasImages = !(lhs.images?.isEmpty ?? true)
+        let rhsHasImages = !(rhs.images?.isEmpty ?? true)
+        
+        // If one has images and the other doesn't, the one with images comes first
+        if lhsHasImages != rhsHasImages {
+            return lhsHasImages && !rhsHasImages
+        }
+        
+        // Both have same image status, sort by name
         return lhs.unwrappedName < rhs.unwrappedName
     }
 }

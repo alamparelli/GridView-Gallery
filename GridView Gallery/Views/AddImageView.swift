@@ -12,8 +12,7 @@ struct AddImageView: View {
     @State var project: Project?
     @State private var tags: [Tag] = []
     @State private var description = ""
-    
-    @State private var selectedImages: [ImageItem] = []
+    @State private var selectedImageData: [Data] = []
     @State private var pickerItems: [PhotosPickerItem] = []
     @State private var isLoading = false
     
@@ -26,7 +25,7 @@ struct AddImageView: View {
         NavigationStack {
             ScrollView {
                 Form {
-                    if selectedImages.isEmpty {
+                    if selectedImageData.isEmpty {
                         VStack (alignment: .leading) {
                             HStack {
                                 PhotosPicker(selection: $pickerItems, maxSelectionCount: 6, matching: .images , preferredItemEncoding: .compatible ) {
@@ -45,7 +44,8 @@ struct AddImageView: View {
                                 Button{
                                     // Picture
                                 } label: {
-                                    Image(systemName: "camera")
+                                    Label("Take a picture", systemImage: "camera")
+                                        .labelStyle(.iconOnly)
                                         .frame(maxWidth: .infinity, minHeight: 100)
                                         .overlay {
                                             RoundedRectangle(cornerRadius: 10)
@@ -68,16 +68,18 @@ struct AddImageView: View {
                             
                             PhotosPicker(selection: $pickerItems, maxSelectionCount: 6, matching: .images , preferredItemEncoding: .compatible ) {
                                 ZStack {
-                                    ForEach(selectedImages.enumerated(), id: \.element) { element, img in
-                                        if let uiImage = UIImage(data: img.thumbnailData) {
-                                            Image(uiImage: uiImage)
+                                    ForEach(Array(selectedImageData.enumerated()), id: \.offset) { index, imageData in
+                                        if let uiImage = UIImage(data: imageData),
+                                           let thumbnailData = uiImage.jpegData(compressionQuality: 0.8),
+                                           let thumbnail = UIImage(data: thumbnailData) {
+                                            Image(uiImage: thumbnail)
                                                 .resizable()
                                                 .scaledToFill()
                                                 .frame(width: 150, height: 100)
                                                 .clipped()
                                                 .clipShape(.rect(cornerRadius: 10))
-                                                .offset(x: offset * Double(element) - 5)
-//                                                .rotationEffect(Angle(degrees: offset * Double(element) / 3 - 10))
+                                                .offset(x: offset * Double(index) - 5)
+//                                                .rotationEffect(Angle(degrees: offset * Double(index) / 3 - 10))
                                         }
                                     }
                                 }
@@ -99,7 +101,8 @@ struct AddImageView: View {
                         Button{
                             dismiss()
                         } label: {
-                            Image(systemName: "xmark")
+                            Label("Cancel", systemImage: "xmark")
+                                .labelStyle(.iconOnly)
                                 .foregroundStyle(.accent)
                         }
                     }
@@ -107,7 +110,8 @@ struct AddImageView: View {
                         Button{
                             addImage()
                         } label: {
-                            Image(systemName: "square.and.arrow.down")
+                            Label("Add Image", systemImage:  "square.and.arrow.down")
+                                .labelStyle(.iconOnly)
                                 .foregroundStyle(.accent)
                         }
                         .disabled(isLoading)
@@ -122,14 +126,13 @@ struct AddImageView: View {
         .onChange(of: pickerItems) {
             Task {
                 isLoading = true
-                selectedImages = []
+                selectedImageData = []
                 for item in pickerItems {
                     if let data = try await item.loadTransferable(type: Data.self) {
                         // Convert data to UIImage first
                         if let uiImage = UIImage(data: data) {
                             if let imageDisk = uiImage.jpegData(compressionQuality: 0.5) {
-                                let image = ImageItem(imageData: imageDisk)
-                                selectedImages.append(image)
+                                selectedImageData.append(imageDisk)
                             }
                         }
                     }
@@ -146,7 +149,9 @@ struct AddImageView: View {
     }
     
     func addImage() {
-        for img in selectedImages {
+        for imageData in selectedImageData {
+            let img = ImageItem(imageData: imageData)
+            
             if !description.isEmpty {
                 img.fulldescription = description
             }

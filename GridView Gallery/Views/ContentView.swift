@@ -7,10 +7,15 @@ import SwiftUI
 struct ContentView: View {
     @Environment(NavigationService.self) var ns
     @Environment(DatabaseService.self) var db
+    @Environment(\.dismiss) var dismiss
     
     @State private var showPicker = false
     @State private var showAddImage = false
+    
     @State private var showDebug = false
+    
+    @State private var showMoveView = false
+    @State private var showDeleteConfirmation: Bool = false
         
     var body: some View {
         VStack {
@@ -20,6 +25,7 @@ struct ContentView: View {
                         showAddImage = true
                     } label: {
                         Label("Add a photo", systemImage: "photo.badge.plus")
+                            .labelStyle(.iconOnly)
                     }
                 } description: {
                     Text("Nothing to Show yet")
@@ -38,19 +44,39 @@ struct ContentView: View {
                 }
             }
             
-            if db.isEditing {
-                ToolbarItemGroup {
-                    Button("Delete", systemImage: "trash", role: .destructive) {
-                        db.removeImageItems(db.selectedImagesWhenEditingList)
+            ToolbarSpacer(.flexible)
+            
+            if !db.isEditing {
+                ToolbarItem {
+                    Button {
+                        showAddImage = true
+                    } label: {
+                        Label("Add a photo", systemImage: "photo.badge.plus")
+                            .labelStyle(.iconOnly)
                     }
                 }
             }
-            
-            ToolbarItem {
-                Button {
-                    showAddImage = true
-                } label: {
-                    Label("Add a photo", systemImage: "photo.badge.plus")
+        
+            if db.isEditing && !db.selectedImagesWhenEditingList.isEmpty {
+                ToolbarItem {
+                    Button("Delete", systemImage: "trash", role: .destructive) {
+                        showDeleteConfirmation = true
+                    }
+                    .confirmationDialog("Delete Images", isPresented: $showDeleteConfirmation) {
+                        Button ("Delete", role: .destructive) {
+                            db.removeImageItems(db.selectedImagesWhenEditingList)
+                        }
+                        Button("Not now", role: .cancel) {
+                            dismiss()
+                        }
+                    } message: {
+                        Text("Are you sure to delete this note?")
+                    }
+                }
+                ToolbarItem {
+                    Button("Delete", systemImage: "arrow.forward.folder", role: .destructive) {
+                        showMoveView = true
+                    }
                 }
             }
         }
@@ -59,10 +85,17 @@ struct ContentView: View {
                 db.isEditing = false
             }
         }
+        .onDisappear {
+            db.isEditing = false
+        }
         .animation(.bouncy, value: db.isEditing)
         .navigationTitle("Home")
         .sheet(isPresented: $showAddImage) {
             AddImageView()
+        }
+        .sheet(isPresented: $showMoveView) {
+            MoveImagesView()
+                .presentationDetents([.medium])
         }
     }
 }

@@ -37,7 +37,8 @@ struct AddProjectView: View {
                     Button{
                         dismiss()
                     } label: {
-                        Image(systemName: "xmark")
+                        Label("Cancel", systemImage:  "xmark")
+                            .labelStyle(.iconOnly)
                             .foregroundStyle(.accent)
                     }
                 }
@@ -46,7 +47,8 @@ struct AddProjectView: View {
                         db.addProject(Project(name: project))
                         dismiss()
                     } label: {
-                        Image(systemName: "square.and.arrow.down")
+                        Label("Add project", systemImage:  "square.and.arrow.down")
+                            .labelStyle(.iconOnly)
                             .foregroundStyle(.accent)
                     }
                     .tint(.accentColorInverted)

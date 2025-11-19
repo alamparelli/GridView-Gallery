@@ -22,6 +22,7 @@ struct ProjectsView: View {
                         showAddProject = true
                     } label: {
                         Label("Add a project", systemImage: "plus.rectangle.on.folder")
+                            .labelStyle(.iconOnly)
                     }
                 } description: {
                     Text("Nothing to Show yet")
@@ -54,6 +55,7 @@ struct ProjectsView: View {
                     showAddProject = true
                 } label: {
                     Label("Add a project", systemImage: "plus.rectangle.on.folder")
+                        .labelStyle(.iconOnly)
                 }
             }
             ToolbarItem {
