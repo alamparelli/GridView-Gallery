@@ -3,25 +3,12 @@
 //
 import SwiftUI
 
-struct SelectionView: View {
-    let isSelected: Bool
-    
-    var body: some View {
-        Circle()
-            .fill(isSelected ? Color.accent : Color.white.opacity(0.3))
-            .stroke(.white, lineWidth: 2 )
-            .frame(width: 20, height: 20)
-    }
-}
-
 struct ImageView: View {
     let image: ImageItem
     @Environment(NavigationService.self) var ns
     @Environment(DatabaseService.self) var db
     
-    @State private var isSelected = false
-    @State private var showSelection = false
-    
+    @State private var isSelected = false    
     @State private var openDetails = false
     
     var body: some View {
@@ -69,7 +56,6 @@ struct ImageView: View {
                     db.selectedImagesWhenEditingList.insert(image)
                     db.resetSelectedItems = false
                 }
-                showSelection = true
             }
         } else {
             openDetails = true

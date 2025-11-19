@@ -70,7 +70,7 @@ struct ContentView: View {
                             dismiss()
                         }
                     } message: {
-                        Text("Are you sure to delete this note?")
+                        Text("Are you sure to delete this image?")
                     }
                 }
                 ToolbarItem {

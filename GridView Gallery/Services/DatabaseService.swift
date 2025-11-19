@@ -16,8 +16,10 @@ class DatabaseService {
     
     // Editbutton
     var selectedImagesWhenEditingList = Set<ImageItem>()
+    var selectedProjectsWhenEditingList: Set<Project> = []
     var isEditing = false
     var resetSelectedItems = false
+    var resetSelectedProjects = false
     var projectToUpdate: Project?
     
     init(context: ModelContext) {
@@ -39,6 +41,10 @@ class DatabaseService {
     
     func resetSelectedImagesWhenEditingList() {
         self.selectedImagesWhenEditingList.removeAll()
+    }
+    
+    func resetSelectedProjectsWhenEditingList() {
+        self.selectedProjectsWhenEditingList.removeAll()
     }
     
     func projectImages(_ project: Project) -> [ImageItem] {
@@ -150,5 +156,27 @@ class DatabaseService {
         context.delete(project)
         self.save()
         self.refreshProjects()
+    }
+    
+    func removeProjects<C: Collection>(_ projects: C) where C.Element == Project {
+        for project in projects {
+            context.delete(project)
+        }
+        self.save()
+        self.refreshAll()
+    }
+    
+    func removeProjectsAndImages<C: Collection>(_ projects: C) where C.Element == Project {
+        for project in projects {
+            if let images = project.images {
+                for image in images {
+                    context.delete(image)
+                }
+            }
+            context.delete(project)
+        }
+    
+        self.save()
+        self.refreshAll()
     }
 }

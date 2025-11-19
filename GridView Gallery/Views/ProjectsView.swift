@@ -8,15 +8,24 @@ struct ProjectsView: View {
     @State private var showAddProject: Bool = false
     @Environment(DatabaseService.self) var db
     @Environment(NavigationService.self) var ns
+    @Environment(\.dismiss) var dismiss
     
     let columns: [GridItem] = [
         GridItem(.flexible()),
         GridItem(.flexible()),
     ]
     
+    @State private var isEditing = false
+    @State private var showMoveView = false
+    @State private var showDeleteConfirmation: Bool = false
+    
+    var isProjectsEmpty: Bool {
+        db.projects.isEmpty
+    }
+    
     var body: some View {
         VStack {
-            if db.projects.isEmpty {
+            if isProjectsEmpty {
                 ContentUnavailableView {
                     Button {
                         showAddProject = true
@@ -33,9 +42,6 @@ struct ProjectsView: View {
                         ForEach(db.projects.sorted()) { project in
                             if let images = project.images {
                                 ProjectSquareView(project: project, images: images)
-                                    .onTapGesture {
-                                        ns.navigate(to: Destination.project(project))
-                                    }
                             }
                         }
                     }
@@ -50,19 +56,42 @@ struct ProjectsView: View {
         .navigationTitle("Projects")
         .navigationBarTitleDisplayMode(.automatic)
         .toolbar {
-            ToolbarItem {
-                Button {
-                    showAddProject = true
-                } label: {
-                    Label("Add a project", systemImage: "plus.rectangle.on.folder")
-                        .labelStyle(.iconOnly)
+            if !isProjectsEmpty {
+                ToolbarItem {
+                    Button(db.isEditing ? "Done" : "Edit" , systemImage: db.isEditing ? "checkmark" : "pencil") {
+                        db.isEditing.toggle()
+                        db.resetSelectedProjectsWhenEditingList()
+                    }
                 }
             }
-            ToolbarItem {
-                //Debug
-                Button("Delete") {
-                    for pr in db.projects {
-                        db.removeProject(pr)
+            
+            ToolbarSpacer(.flexible)
+            
+            if !db.isEditing {
+                ToolbarItem {
+                    Button {
+                        showAddProject = true
+                    } label: {
+                        Label("Add a project", systemImage: "plus.rectangle.on.folder")
+                            .labelStyle(.iconOnly)
+                    }
+                }
+            }
+            
+            if db.isEditing && !db.selectedProjectsWhenEditingList.isEmpty {
+                ToolbarItem {
+                    Button("Delete", systemImage: "trash", role: .destructive) {
+                        showDeleteConfirmation = true
+                    }
+                    .confirmationDialog("Delete Project", isPresented: $showDeleteConfirmation) {
+                        Button ("Delete all", role: .destructive) {
+                            db.removeProjectsAndImages(db.selectedProjectsWhenEditingList)
+                        }
+                        Button ("Only the project", role: .destructive) {
+                            db.removeProjects(db.selectedProjectsWhenEditingList)
+                        }
+                    } message: {
+                        Text("Are you sure to delete this project?")
                     }
                 }
             }
@@ -70,6 +99,9 @@ struct ProjectsView: View {
         .sheet(isPresented: $showAddProject) {
             AddProjectView()
                 .presentationDetents([.fraction(0.25)])
+        }
+        .onDisappear {
+            db.isEditing = false
         }
     }
 }

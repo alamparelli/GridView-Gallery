@@ -24,6 +24,10 @@ struct ImageItemView: View {
 struct ProjectSquareView: View {
     var project: Project
     var images: [ImageItem]
+    @Environment(DatabaseService.self) var db
+    @Environment(NavigationService.self) var ns
+    
+    @State private var isSelected = false
     
     var id: Int {
         if images.count < 3 {
@@ -34,57 +38,94 @@ struct ProjectSquareView: View {
     }
     
     var body: some View {
-        VStack (alignment: .leading, spacing: 4) {
-            if images.isEmpty {
-                HStack (spacing: 0) {
-                    Rectangle()
-                        .fill(Color.gray.opacity(0.1))
-                }
-                .frame(width: 180, height: 173)
-                .cornerRadius(10)
-            } else {
-                switch id {
-                case 1:
+        ZStack (alignment: .topTrailing) {
+            VStack (alignment: .leading, spacing: 4) {
+                if images.isEmpty {
                     HStack (spacing: 0) {
-                        ImageItemView(index: 0, images: images, width: 180, height: 173)
+                        Rectangle()
+                            .fill(Color.gray.opacity(0.1))
                     }
                     .frame(width: 180, height: 173)
                     .cornerRadius(10)
-                case 2:
-                    HStack (spacing: 0) {
-                        ImageItemView(index: 0, images: images, width: 90, height: 173)
+                } else {
+                    switch id {
+                    case 1:
+                        HStack (spacing: 0) {
+                            ImageItemView(index: 0, images: images, width: 180, height: 173)
+                        }
+                        .frame(width: 180, height: 173)
+                        .cornerRadius(10)
+                    case 2:
+                        HStack (spacing: 0) {
+                            ImageItemView(index: 0, images: images, width: 90, height: 173)
 
-                        VStack (spacing: 0) {
-                            ImageItemView(index: 1, images: images, width: 90, height: 86.5)
+                            VStack (spacing: 0) {
+                                ImageItemView(index: 1, images: images, width: 90, height: 86.5)
 
-                            ImageItemView(index: 2, images: images, width: 90, height: 86.5)
+                                ImageItemView(index: 2, images: images, width: 90, height: 86.5)
+
+                            }
+                        }
+                        .frame(width: 180, height: 173)
+                        .cornerRadius(10)
+                    default:
+                        HStack (spacing: 0) {
+                            VStack (spacing: 0) {
+                                ImageItemView(index: 0, images: images, width: 90, height: 86.5)
+
+                                ImageItemView(index: 1, images: images, width: 90, height: 86.5)
+
+                            }
+                            ImageItemView(index: 2, images: images, width: 90, height: 173)
 
                         }
+                        .frame(width: 180, height: 173)
+                        .cornerRadius(10)
                     }
-                    .frame(width: 180, height: 173)
-                    .cornerRadius(10)
-                default:
-                    HStack (spacing: 0) {
-                        VStack (spacing: 0) {
-                            ImageItemView(index: 0, images: images, width: 90, height: 86.5)
-
-                            ImageItemView(index: 1, images: images, width: 90, height: 86.5)
-
-                        }
-                        ImageItemView(index: 2, images: images, width: 90, height: 173)
-
-                    }
-                    .frame(width: 180, height: 173)
-                    .cornerRadius(10)
+                }
+                VStack (alignment: .leading) {
+                    Text(project.unwrappedName)
+                        .fontWeight(.semibold)
+                    Text("^[\(images.count) Item](inflect:true)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                 }
             }
-            VStack (alignment: .leading) {
-                Text(project.unwrappedName)
-                    .fontWeight(.semibold)
-                Text("^[\(images.count) Item](inflect:true)")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                .onTapGesture {
+                    actionButton(project)
+                }
+            
+            if db.isEditing {
+                SelectionView(isSelected: isSelected)
+                    .padding()
             }
+        }
+        .onChange(of: db.isEditing) {
+            if !db.isEditing{
+                isSelected = false
+            }
+        }
+        .onChange(of: db.resetSelectedItems) {
+            if db.resetSelectedItems {
+                isSelected = false
+            }
+        }
+    }
+    
+    func actionButton(_ project: Project) {
+        if db.isEditing {
+            withAnimation{
+                if isSelected {
+                    isSelected = false
+                    db.selectedProjectsWhenEditingList.remove(project)
+                } else {
+                    isSelected = true
+                    db.selectedProjectsWhenEditingList.insert(project)
+                    db.resetSelectedItems = false
+                }
+            }
+        } else {
+            ns.navigate(to: Destination.project(project))
         }
     }
 }
