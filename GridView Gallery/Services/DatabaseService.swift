@@ -120,6 +120,7 @@ class DatabaseService {
         }
         self.save()
         self.refreshImages()
+        self.resetSelectedImagesWhenEditingList()
     }
     
     func addTag(_ tag: Tag) {
@@ -158,19 +159,13 @@ class DatabaseService {
         self.refreshProjects()
     }
     
-    func removeProjects<C: Collection>(_ projects: C) where C.Element == Project {
+    func removeProjects<C: Collection>(_ projects: C, _ removeImages: Bool = false) where C.Element == Project {
         for project in projects {
-            context.delete(project)
-        }
-        self.save()
-        self.refreshAll()
-    }
-    
-    func removeProjectsAndImages<C: Collection>(_ projects: C) where C.Element == Project {
-        for project in projects {
-            if let images = project.images {
-                for image in images {
-                    context.delete(image)
+            if removeImages {
+                if let images = project.images {
+                    for image in images {
+                        context.delete(image)
+                    }
                 }
             }
             context.delete(project)
@@ -178,5 +173,6 @@ class DatabaseService {
     
         self.save()
         self.refreshAll()
+        self.resetSelectedProjectsWhenEditingList()
     }
 }

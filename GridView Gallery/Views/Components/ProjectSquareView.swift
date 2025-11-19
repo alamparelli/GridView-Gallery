@@ -26,6 +26,7 @@ struct ProjectSquareView: View {
     var images: [ImageItem]
     @Environment(DatabaseService.self) var db
     @Environment(NavigationService.self) var ns
+    @State private var isTapped = false
     
     @State private var isSelected = false
     
@@ -91,6 +92,7 @@ struct ProjectSquareView: View {
                         .foregroundStyle(.secondary)
                 }
             }
+                .scaleEffect(isTapped ? 0.99 : 1.0 )
                 .onTapGesture {
                     actionButton(project)
                 }
@@ -113,19 +115,22 @@ struct ProjectSquareView: View {
     }
     
     func actionButton(_ project: Project) {
-        if db.isEditing {
-            withAnimation{
-                if isSelected {
-                    isSelected = false
-                    db.selectedProjectsWhenEditingList.remove(project)
-                } else {
-                    isSelected = true
-                    db.selectedProjectsWhenEditingList.insert(project)
-                    db.resetSelectedItems = false
-                }
+        withAnimation(.smooth(duration: 0.1)) {
+            isTapped = true
+            if db.isEditing {
+                    if isSelected {
+                        isSelected = false
+                        db.selectedProjectsWhenEditingList.remove(project)
+                    } else {
+                        isSelected = true
+                        db.selectedProjectsWhenEditingList.insert(project)
+                        db.resetSelectedItems = false
+                    }
+            } else {
+                ns.navigate(to: Destination.project(project))
             }
-        } else {
-            ns.navigate(to: Destination.project(project))
+        } completion: {
+            isTapped = false
         }
     }
 }

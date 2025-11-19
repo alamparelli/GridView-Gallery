@@ -10,20 +10,21 @@ struct ImageView: View {
     
     @State private var isSelected = false    
     @State private var openDetails = false
+    @State private var isTapped = false
     
     var body: some View {
         if let uiImage = UIImage(data: image.thumbnailData) {
             ZStack (alignment: .topTrailing) {
-                Button {
-                    actionButton(image)
-                } label: {
-                    Image(uiImage: uiImage)
-                        .resizable()
-                        .scaledToFit()
-                        .clipped()
-                        .clipShape(.rect(cornerRadius: 10))
-                }
-                
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .scaledToFit()
+                    .clipped()
+                    .clipShape(.rect(cornerRadius: 10))
+                    .scaleEffect(isTapped ? 0.99 : 1.0 )
+                    .onTapGesture {
+                        actionButton(image)
+                    }
+
                 if db.isEditing {
                     SelectionView(isSelected: isSelected)
                         .padding()
@@ -46,8 +47,9 @@ struct ImageView: View {
     }
     
     func actionButton(_ image: ImageItem) {
-        if db.isEditing {
-            withAnimation{
+        withAnimation(.smooth(duration: 0.1)) {
+            isTapped = true
+            if db.isEditing {
                 if isSelected {
                     isSelected = false
                     db.selectedImagesWhenEditingList.remove(image)
@@ -56,9 +58,11 @@ struct ImageView: View {
                     db.selectedImagesWhenEditingList.insert(image)
                     db.resetSelectedItems = false
                 }
+            } else {
+                openDetails = true
             }
-        } else {
-            openDetails = true
+        } completion: {
+            isTapped = false
         }
     }
 }

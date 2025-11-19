@@ -52,6 +52,7 @@ struct MoveImagesView: View {
                         showAddProject = true
                     } else {
                         // update the project for selected images
+                        db.projectToUpdate = project
                         db.updateProjectImage()
                         dismiss()
                     }

@@ -85,7 +85,7 @@ struct ProjectsView: View {
                     }
                     .confirmationDialog("Delete Project", isPresented: $showDeleteConfirmation) {
                         Button ("Delete all", role: .destructive) {
-                            db.removeProjectsAndImages(db.selectedProjectsWhenEditingList)
+                            db.removeProjects(db.selectedProjectsWhenEditingList, true)
                         }
                         Button ("Only the project", role: .destructive) {
                             db.removeProjects(db.selectedProjectsWhenEditingList)
