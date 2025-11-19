@@ -15,6 +15,11 @@ class ImageItem {
     var tags: [Tag]?
     var createdAt: Date
     
+    // Performance: Cache decoded UIImages to avoid repeated Data->UIImage conversions
+    @Transient private var cachedThumbnailImage: UIImage?
+    @Transient private var cachedFullImage: UIImage?
+
+    
     init(imageData: Data, fulldescription: String? = nil, tags: [Tag]? = nil, createdAt: Date = Date()) {
         self.imageData = imageData
         self.fulldescription = fulldescription
@@ -26,6 +31,14 @@ class ImageItem {
     
     var uiImage: UIImage? {
         UIImage(data: imageData)
+    }
+    
+    var thumbnailImage: UIImage? {
+        // Cache the thumbnail image to avoid repeated decoding
+        if cachedThumbnailImage == nil {
+            cachedThumbnailImage = UIImage(data: thumbnailData)
+        }
+        return cachedThumbnailImage
     }
     
     // Generate thumbnail once and cache it

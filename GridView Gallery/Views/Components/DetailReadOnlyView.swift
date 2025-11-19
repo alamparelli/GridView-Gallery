@@ -14,12 +14,11 @@ struct DetailReadOnlyView: View {
                 Text(img.project?.name ?? "None")
             }
             .pickerStyle(.navigationLink)
-            .foregroundStyle(.accent)
             .font(.subheadline)
             .padding()
             .overlay {
                 RoundedRectangle(cornerRadius: 10)
-                    .stroke(.accent, lineWidth: 1)
+                    .stroke(.strokeBorder, lineWidth: 1)
             }
 
             VStack (alignment: .leading) {
@@ -32,14 +31,13 @@ struct DetailReadOnlyView: View {
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
                         .background(Color.accentColorInverted.opacity(0.5))
-                        .foregroundColor(.accent)
                         .cornerRadius(20)
                 }
                 .padding(.horizontal, 4)
                 .frame(maxWidth: .infinity, minHeight: 75)
                 .overlay {
                     RoundedRectangle(cornerRadius: 10)
-                        .stroke(.accent, lineWidth: 1)
+                        .stroke(.strokeBorder, lineWidth: 1)
                 }
 
             }
@@ -50,13 +48,12 @@ struct DetailReadOnlyView: View {
                 
                 Text(img.fulldescription ?? "")
                     .multilineTextAlignment(.leading)
-                    .foregroundStyle(.accent)
                     .font(.subheadline)
                     .padding(.horizontal, 4)
                     .frame(maxWidth: .infinity, minHeight: 75)
                     .overlay {
                         RoundedRectangle(cornerRadius: 10)
-                            .stroke(.accent, lineWidth: 1)
+                            .stroke(.strokeBorder, lineWidth: 1)
                     }
             }
         }
