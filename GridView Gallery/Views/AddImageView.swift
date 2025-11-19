@@ -12,8 +12,10 @@ struct AddImageView: View {
     @State var project: Project?
     @State private var tags: [Tag] = []
     @State private var description = ""
+    
     @State private var selectedImages: [ImageItem] = []
     @State private var pickerItems: [PhotosPickerItem] = []
+    @State private var isLoading = false
     
     @Environment(\.dismiss) var dismiss
     
@@ -108,6 +110,7 @@ struct AddImageView: View {
                             Image(systemName: "square.and.arrow.down")
                                 .foregroundStyle(.accent)
                         }
+                        .disabled(isLoading)
                         .tint(.accentColorInverted)
                         .buttonStyle(.borderedProminent)
                     }
@@ -118,6 +121,7 @@ struct AddImageView: View {
         }
         .onChange(of: pickerItems) {
             Task {
+                isLoading = true
                 selectedImages = []
                 for item in pickerItems {
                     if let data = try await item.loadTransferable(type: Data.self) {
@@ -130,6 +134,7 @@ struct AddImageView: View {
                         }
                     }
                 }
+                isLoading = false
             }
         }
         .onAppear {

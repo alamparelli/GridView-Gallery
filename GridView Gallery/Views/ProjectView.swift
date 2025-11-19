@@ -12,6 +12,8 @@ struct ProjectView: View {
     @State private var showAddImage = false
     @State private var searchText: String = ""
     
+    @State private var isEditing = false
+    
     var body: some View {
         VStack {
             if project.images?.count == 0 {

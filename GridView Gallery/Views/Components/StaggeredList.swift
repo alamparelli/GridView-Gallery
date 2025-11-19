@@ -12,7 +12,7 @@ struct StaggeredList: View {
         images.sorted(by: { $0.createdAt > $1.createdAt })
     }
     
-    var splitArray: [[ImageItem]] {
+    func splitArray() -> [[ImageItem]] {
         var result: [[ImageItem]] = []
         
         var list1: [ImageItem] = []
@@ -26,17 +26,6 @@ struct StaggeredList: View {
             }
         }
         
-//        sortedImages.forEach { image in
-//            let index = images.firstIndex {$0.id == image.id }
-//            
-//            if let index = index {
-//                if index % 2 == 0  {
-//                    list1.append(image)
-//                } else {
-//                    list2.append(image)
-//                }
-//            }
-//        }
         result.append(list1)
         result.append(list2)
         return result
@@ -46,7 +35,7 @@ struct StaggeredList: View {
         ScrollView {
             HStack(alignment: .top) {
                 LazyVStack(spacing: 8) {
-                    ForEach(splitArray[0]) { item in
+                    ForEach(splitArray()[0]) { item in
                         ImageView(image: item)
                             .id(item.id)
 
@@ -54,7 +43,7 @@ struct StaggeredList: View {
                 }
                 
                 LazyVStack(spacing: 8) {
-                    ForEach(splitArray[1]) { item in
+                    ForEach(splitArray()[1]) { item in
                         ImageView(image: item)
                             .id(item.id)
                     }

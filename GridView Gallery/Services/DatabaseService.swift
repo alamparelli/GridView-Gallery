@@ -14,6 +14,20 @@ class DatabaseService {
     var tags: [Tag] = []
     var projects: [Project] = []
     
+    // Editbutton
+    var selectedImagesWhenEditingList = Set<ImageItem>()
+    var isEditing = false
+    
+    init(context: ModelContext) {
+        self.context = context
+        
+        self.refreshAll()
+    }
+    
+    func resetSelectedImagesWhenEditingList() {
+        self.selectedImagesWhenEditingList.removeAll()
+    }
+    
     func projectImages(_ project: Project) -> [ImageItem] {
         let pName = project.name
         let descriptor = FetchDescriptor<ImageItem>(predicate: #Predicate { $0.project?.name == pName})
@@ -25,12 +39,6 @@ class DatabaseService {
             print("Error fetching notes: \(error)")
         }
         return data
-    }
-    
-    init(context: ModelContext) {
-        self.context = context
-        
-        self.refreshAll()
     }
     
     private func refreshAll() {
@@ -85,7 +93,8 @@ class DatabaseService {
         self.refreshImages()
     }
     
-    func removeImageItems(_ images: [ImageItem]) {
+    // helped by Claude to create a generic
+    func removeImageItems<C: Collection>(_ images: C) where C.Element == ImageItem {
         for image in images {
             _ = image.imageData // fix for external storage
             context.delete(image)
