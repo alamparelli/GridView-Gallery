@@ -51,7 +51,7 @@ struct TagsView: View {
             
             VStack {
                 if !isEditing {
-                    FlowLayout(mode: .scrollable, items: tags, itemSpacing: 4) {
+                    FlowLayout(mode: .scrollable, items: tags.sorted(by: { $0.name < $1.name }), itemSpacing: 4) {
                         Text("#\($0.name)")
                             .font(.subheadline)
                             .padding(.horizontal, 8)
