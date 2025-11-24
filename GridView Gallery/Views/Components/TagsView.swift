@@ -64,6 +64,14 @@ struct TagsView: View {
                         .padding(.horizontal, 4)
                         .padding(.vertical)
                         .focused($isFocused)
+//                    https://stackoverflow.com/questions/70318811/detecting-keyboard-submit-button-press-for-texteditor-swiftui
+                        .onChange(of: tagString) {
+                            if !tagString.filter({ $0.isNewline }).isEmpty {
+                                convertTags()
+                                self.isFocused = false
+                                self.isEditing = false
+                            }
+                        }
                         .safeAreaBar(edge: .trailing) {
                             Button {
                                 convertTags()
