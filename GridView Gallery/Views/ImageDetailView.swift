@@ -22,7 +22,6 @@ struct ImageDetailView: View {
     @State private var tags: [Tag] = []
     @State private var description = ""
     
-    
     // Gestures
     @State private var fullScreen: Bool = false
     @State private var lastScale = 1.0
@@ -32,6 +31,8 @@ struct ImageDetailView: View {
     
     private let minScale = 1.0
     private let maxScale = 3.0
+    
+    @Namespace private var animation
     
     var magnification: some Gesture {
         MagnificationGesture()
@@ -61,8 +62,9 @@ struct ImageDetailView: View {
                         }
                     })
             )
+            // Only add double-tap when zoomed
             .simultaneously(
-                with: TapGesture(count: 2)
+                with: scale > 1.0 ? TapGesture(count: 2)
                     .onEnded {
                         withAnimation {
                             lastScale = 1.0
@@ -70,8 +72,17 @@ struct ImageDetailView: View {
                             offset = .zero
                             lastOffset = .zero
                         }
-                }
+                    } : nil
             )
+    }
+    
+    var fullScreenGesture: some Gesture {
+        TapGesture()
+            .onEnded { _ in
+                withAnimation {
+                    fullScreen.toggle()
+                }
+            }
     }
     
     private func handleOffsetChange(_ offset: CGSize) -> CGSize {
@@ -93,15 +104,6 @@ struct ImageDetailView: View {
         scale = getMinimumZoomScale()
         scale = getMaximumZoomScale()
     }
-    
-    var fullScreenGesture: some Gesture {
-        TapGesture()
-            .onEnded { _ in
-                withAnimation {
-                    fullScreen.toggle()
-                }
-            }
-    }
  
     var body: some View {
         NavigationStack {
@@ -119,6 +121,7 @@ struct ImageDetailView: View {
                                             .clipped()
                                             .contentShape(Rectangle())
                                             .gesture(fullScreenGesture)
+                                            .matchedGeometryEffect(id: "image-\(img.id)", in: animation)
                                     }
                                     
                                     if !fullScreen {
@@ -143,6 +146,7 @@ struct ImageDetailView: View {
                             .gesture(fullScreenGesture)
                             .gesture(magnification)
                             .tag(img.persistentModelID)
+                            .matchedGeometryEffect(id: "image-\(img.id)", in: animation)
                         }
                     }
                 }
@@ -210,26 +214,6 @@ struct ImageDetailView: View {
             .onDisappear {
                 UIScrollView.appearance().bounces = true
             }
-            //            .toolbar {
-            //                ToolbarItem(placement: .cancellationAction) {
-            //                    Button{
-            //                        dismiss()
-            //                    } label: {
-            //                        Image(systemName: "xmark")
-            //                            .foregroundStyle(.accent)
-            //                    }
-            //                }
-            //                ToolbarItem(placement: .confirmationAction) {
-            //                    Button{
-            //                        showEditDetails = true
-            //                    } label: {
-            //                        Image(systemName: "pencil")
-            //                            .foregroundStyle(.accent)
-            //                    }
-            //                    .tint(.accentColorInverted)
-            //                    .buttonStyle(.borderedProminent)
-            //                }
-            //            }
         }
     }
     
