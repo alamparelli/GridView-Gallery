@@ -12,7 +12,8 @@ class ImageItem {
     @Attribute(.externalStorage) var thumbnailData: Data
     var fulldescription: String?
     @Relationship(deleteRule: .nullify) var project: Project?
-    var tags: [Tag]?
+    @Relationship(deleteRule: .nullify) var tags: [Tag]
+
     var createdAt: Date
     
     // Performance: Cache decoded UIImages to avoid repeated Data->UIImage conversions
@@ -20,7 +21,7 @@ class ImageItem {
     @Transient private var cachedFullImage: UIImage?
 
     
-    init(imageData: Data, fulldescription: String? = nil, tags: [Tag]? = nil, createdAt: Date = Date()) {
+    init(imageData: Data, fulldescription: String? = nil, tags: [Tag] = [], createdAt: Date = Date()) {
         self.imageData = imageData
         self.fulldescription = fulldescription
         self.tags = tags

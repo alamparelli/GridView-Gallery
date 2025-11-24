@@ -91,7 +91,7 @@ struct AddImageView: View {
                         
                     }
                     
-                    AddDetailsImageView(project: $project, tags: $tags, description: $description)
+                    AddDetailsImageView(imageItem: nil, tags: $tags, project: $project, description: $description)
                 }
                 .padding(.horizontal)
                 .navigationTitle("Add Image")
@@ -156,9 +156,8 @@ struct AddImageView: View {
                 img.fulldescription = description
             }
             
-            if !tags.isEmpty {
-                img.tags = tags
-            }
+            // Use the @State tags directly (populated by TagsView via binding)
+            img.tags = tags
             
             if let prj = project {
                 img.project = prj

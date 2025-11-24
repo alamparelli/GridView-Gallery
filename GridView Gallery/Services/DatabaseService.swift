@@ -129,14 +129,15 @@ class DatabaseService {
         self.refreshTags()
     }
     
-    func editTag() {
-        
-    }
-    
-    func removeTag(_ tag: Tag) {
-        context.delete(tag)
-        self.save()
-        self.refreshTags()
+    func checkTag(_ name: String) -> Tag {
+        if tags.filter({$0.name == name}).isEmpty {
+            let tag = Tag(name: name)
+            self.addTag(tag)
+            return tag
+        } else {
+            let tag = tags.filter({$0.name == name}).first!
+            return tag
+        }
     }
     
     func addProject(_ project: Project) {

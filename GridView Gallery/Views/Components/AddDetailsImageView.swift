@@ -6,9 +6,14 @@ import SwiftUI
 
 struct AddDetailsImageView: View {
     @Environment(DatabaseService.self) var db
+    
+    var imageItem: ImageItem?  // For ImageDetailView (editing existing)
+    @Binding var tags: [Tag]   // For AddImageView (creating new)
+    
     @Binding var project: Project?
-    @Binding var tags : [Tag]
     @Binding var description: String
+    
+    @State private var showEditDetails = true
     
     var body: some View {
         Section {
@@ -33,24 +38,13 @@ struct AddDetailsImageView: View {
                 }
             }
 
-            VStack (alignment: .leading) {
-                Text("Tags")
-                    .fontWeight(.semibold)
-                
-                FlowLayout(mode: .scrollable, items: ["#Short", "#Items", "#Here", "#And", "#A"], itemSpacing: 4) {
-                    Text($0)
-                        .font(.subheadline)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
-                        .background(Color.accentColorInverted.opacity(0.5))
-                        .cornerRadius(20)
-                }
-                .padding(.horizontal, 4)
-                .frame(maxWidth: .infinity, minHeight: 75)
-                .overlay {
-                    RoundedRectangle(cornerRadius: 10)
-                        .stroke(.strokeBorder, lineWidth: 1)
-                }
+            // Use appropriate initializer based on context
+            if let imageItem = imageItem {
+                // Editing existing image - modify model directly
+                TagsView(image: imageItem, showEditDetails: showEditDetails)
+            } else {
+                // Creating new image - use binding
+                TagsView(tags: $tags, showEditDetails: showEditDetails)
             }
             
             VStack (alignment: .leading) {

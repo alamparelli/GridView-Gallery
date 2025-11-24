@@ -17,9 +17,7 @@ struct ImageDetailView: View {
     @State private var selectedImage: ImageItem?
     @State private var showEditDetails = false
     
-    // Edit mode
     @State private var project: Project?
-    @State private var tags: [Tag] = []
     @State private var description = ""
     
     // Gestures
@@ -62,7 +60,6 @@ struct ImageDetailView: View {
                         }
                     })
             )
-            // Only add double-tap when zoomed
             .simultaneously(
                 with: scale > 1.0 ? TapGesture(count: 2)
                     .onEnded {
@@ -120,16 +117,16 @@ struct ImageDetailView: View {
                                             .frame(maxWidth: 600, maxHeight: 250)
                                             .clipped()
                                             .contentShape(Rectangle())
-                                            .gesture(fullScreenGesture)
+                                            .gesture(!showEditDetails ? fullScreenGesture: nil)
                                             .matchedGeometryEffect(id: "image-\(img.id)", in: animation)
                                     }
                                     
                                     if !fullScreen {
                                         if showEditDetails {
-                                            AddDetailsImageView(project: $project, tags: $tags, description: $description)
+                                            AddDetailsImageView(imageItem: img, tags: .constant([]), project: $project, description: $description)
                                                 .padding()
                                         } else {
-                                            DetailReadOnlyView(img: img)
+                                            DetailReadOnlyView(image: img)
                                         }
                                     }
                                 }
@@ -143,8 +140,8 @@ struct ImageDetailView: View {
                             )
                             .scaleEffect(scale)
                             .offset(offset)
-                            .gesture(fullScreenGesture)
-                            .gesture(magnification)
+                            .gesture(!showEditDetails ? fullScreenGesture: nil)
+                            .gesture(!showEditDetails ? magnification : nil)
                             .tag(img.persistentModelID)
                             .matchedGeometryEffect(id: "image-\(img.id)", in: animation)
                         }
@@ -152,7 +149,6 @@ struct ImageDetailView: View {
                 }
                 .tabViewStyle(.page(indexDisplayMode: showEditDetails ? .never : .automatic))
                 .ignoresSafeArea(edges: .top)
-                //            .disabled(showEditDetails)
                 .highPriorityGesture(
                     showEditDetails ? DragGesture() : nil
                 )
@@ -170,6 +166,12 @@ struct ImageDetailView: View {
                                     .padding(12)
                                     .glassEffect()
                                     .clipShape(Circle())
+                            }
+                            
+                            Spacer()
+                            
+                            if showEditDetails {
+                                Text("Edit")
                             }
                             
                             Spacer()
@@ -218,18 +220,18 @@ struct ImageDetailView: View {
     }
     
     func doWork() {
-        // BUG
         if showEditDetails {
             showEditDetails = false
             
+            // Only save description and project
+            // Tags are already modified directly by TagsView!
             selectedImage!.fulldescription = description
             selectedImage!.project = project
-            selectedImage!.tags = tags
             
             db.editImageItem()
         } else {
-            description = selectedImage?.fulldescription ?? "ddd"
-            tags = selectedImage?.tags ?? []
+            // Load state from model
+            description = selectedImage?.fulldescription ?? ""
             project = selectedImage?.project
             
             showEditDetails = true
