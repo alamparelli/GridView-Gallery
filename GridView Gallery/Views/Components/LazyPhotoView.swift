@@ -7,6 +7,7 @@ import SwiftUI
 struct LazyPhotoView: View {
     let image: ImageItem
     let isCurrentPhoto: Bool
+    let fullScreen: Bool
     
     @State private var fullImage: UIImage?
     @State private var isLoadingFull = false
@@ -17,7 +18,8 @@ struct LazyPhotoView: View {
             if let thumbnail = image.thumbnailImage {
                 Image(uiImage: thumbnail)
                     .resizable()
-                    .scaledToFit()
+//                    .aspectRatio(contentMode: fullScreen ? .fit : .fill)
+//                    .scaledToFit()
             } else {
                 placeholderView
             }
@@ -26,7 +28,8 @@ struct LazyPhotoView: View {
             if let fullImg = fullImage {
                 Image(uiImage: fullImg)
                     .resizable()
-                    .scaledToFit()
+//                    .aspectRatio(contentMode: fullScreen ? .fit : .fill)
+//                    .scaledToFit()
                     .transition(.opacity.animation(.easeInOut(duration: 0.2)))
             }
         }

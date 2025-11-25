@@ -27,7 +27,7 @@ struct AddDetailsImageView: View {
                     }
                 } label: {
                     Text("Choose a Project")
-                        .foregroundStyle(.strokeBorder)
+//                        .foregroundStyle(.strokeBorder)
                 }
                 .pickerStyle(.navigationLink)
                 .font(.subheadline)

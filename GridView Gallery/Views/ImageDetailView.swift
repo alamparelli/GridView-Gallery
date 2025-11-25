@@ -61,7 +61,7 @@ struct ImageDetailView: View {
                     })
             )
             .simultaneously(
-                with: scale > 1.0 ? TapGesture(count: 2)
+                with: scale > 1.0 || offset != .zero ? TapGesture(count: 2)
                     .onEnded {
                         withAnimation {
                             lastScale = 1.0
@@ -71,15 +71,14 @@ struct ImageDetailView: View {
                         }
                     } : nil
             )
-    }
-    
-    var fullScreenGesture: some Gesture {
-        TapGesture()
-            .onEnded { _ in
-                withAnimation {
-                    fullScreen.toggle()
-                }
-            }
+            .simultaneously(
+                with: scale == 1.0 ? TapGesture()
+                    .onEnded { _ in
+                        withAnimation {
+                            fullScreen.toggle()
+                        }
+                    } : nil
+            )
     }
     
     private func handleOffsetChange(_ offset: CGSize) -> CGSize {
@@ -104,22 +103,28 @@ struct ImageDetailView: View {
  
     var body: some View {
         NavigationStack {
-            ZStack {
-                TabView(selection: $selectedImageID) {
-                    ForEach(images.sorted(by: { $0.createdAt > $1.createdAt }) ) { img in
-                        if !fullScreen {
+            GeometryReader { proxy in
+                ZStack {
+                    TabView(selection: $selectedImageID) {
+                        ForEach(images.sorted(by: { $0.createdAt > $1.createdAt }) ) { img in
                             ScrollView {
                                 VStack(spacing: 0) {
-                                    if let uiImage = UIImage(data: img.thumbnailData) {
-                                        Image(uiImage: uiImage)
-                                            .resizable()
-                                            .scaledToFill()
-                                            .frame(maxWidth: 600, maxHeight: 250)
-                                            .clipped()
-                                            .contentShape(Rectangle())
-                                            .gesture(!showEditDetails ? fullScreenGesture: nil)
-                                            .matchedGeometryEffect(id: "image-\(img.id)", in: animation)
-                                    }
+                                    LazyPhotoView(
+                                        image: img,
+                                        isCurrentPhoto: selectedImageID == img.id,
+                                        fullScreen: fullScreen,
+                                    )
+                                    .aspectRatio(contentMode: fullScreen ? .fit : .fill)
+                                    .frame(
+                                        maxWidth: .infinity,
+                                        maxHeight: fullScreen ? .infinity : 250
+                                    )
+                                    .frame(height: fullScreen ? proxy.size.height : nil)
+                                    .clipped()
+                                    .scaleEffect(scale)
+                                    .offset(fullScreen ? offset : .zero)
+                                    .gesture(!showEditDetails ? magnification : nil)
+                                    .matchedGeometryEffect(id: "image-\(img.id)", in: animation)
                                     
                                     if !fullScreen {
                                         if showEditDetails {
@@ -133,63 +138,54 @@ struct ImageDetailView: View {
                             }
                             .scrollIndicators(.never)
                             .tag(img.persistentModelID)
-                        } else {
-                            LazyPhotoView(
-                                image: img,
-                                isCurrentPhoto: selectedImageID == img.id
-                            )
-                            .scaleEffect(scale)
-                            .offset(offset)
-                            .gesture(!showEditDetails ? fullScreenGesture: nil)
                             .gesture(!showEditDetails ? magnification : nil)
-                            .tag(img.persistentModelID)
-                            .matchedGeometryEffect(id: "image-\(img.id)", in: animation)
                         }
                     }
-                }
-                .tabViewStyle(.page(indexDisplayMode: showEditDetails ? .never : .automatic))
-                .ignoresSafeArea(edges: .top)
-                .highPriorityGesture(
-                    showEditDetails ? DragGesture() : nil
-                )
-                .animation(.easeInOut, value: showEditDetails)
-                
-                if !fullScreen {
-                    VStack {
-                        HStack {
-                            Button {
-                                showEditDetails ? showEditDetails = false : dismiss()
-                            } label: {
-                                Label("Close", systemImage:  "xmark")
-                                    .labelStyle(.iconOnly)
-                                    .foregroundStyle(.accent)
-                                    .padding(12)
-                                    .glassEffect()
-                                    .clipShape(Circle())
+                    .tabViewStyle(.page(indexDisplayMode: showEditDetails ? .never : .automatic))
+                    //                .ignoresSafeArea(edges: .top)
+                    .highPriorityGesture(
+                        showEditDetails ? DragGesture() : nil
+                    )
+                    .animation(.easeInOut, value: showEditDetails)
+                    
+                    if !fullScreen {
+                        VStack {
+                            HStack {
+                                Button {
+                                    showEditDetails ? showEditDetails = false : dismiss()
+                                } label: {
+                                    Label("Close", systemImage:  "xmark")
+                                        .labelStyle(.iconOnly)
+                                        .foregroundStyle(.accent)
+                                        .padding(12)
+                                        .glassEffect()
+                                        .clipShape(Circle())
+                                }
+                                
+                                Spacer()
+                                
+                                if showEditDetails {
+                                    Text("Edit")
+                                        .font(.subheadline.bold())
+                                }
+                                
+                                Spacer()
+                                
+                                Button {
+                                    doWork()
+                                } label: {
+                                    Label(showEditDetails ? "Done" : "Edit" , systemImage: showEditDetails ? "square.and.arrow.down" : "pencil")
+                                        .labelStyle(.iconOnly)
+                                        .foregroundStyle(.accent)
+                                        .padding(12)
+                                        .background(.accentColorInverted)
+                                        .clipShape(Circle())
+                                }
                             }
+                            .padding()
                             
                             Spacer()
-                            
-                            if showEditDetails {
-                                Text("Edit")
-                            }
-                            
-                            Spacer()
-                            
-                            Button {
-                                doWork()
-                            } label: {
-                                Label(showEditDetails ? "Done" : "Edit" , systemImage: showEditDetails ? "square.and.arrow.down" : "pencil")
-                                    .labelStyle(.iconOnly)
-                                    .foregroundStyle(.accent)
-                                    .padding(12)
-                                    .background(.accentColorInverted)
-                                    .clipShape(Circle())
-                            }
                         }
-                        .padding()
-                        
-                        Spacer()
                     }
                 }
             }
@@ -220,21 +216,23 @@ struct ImageDetailView: View {
     }
     
     func doWork() {
-        if showEditDetails {
-            showEditDetails = false
-            
-            // Only save description and project
-            // Tags are already modified directly by TagsView!
-            selectedImage!.fulldescription = description
-            selectedImage!.project = project
-            
-            db.editImageItem()
-        } else {
-            // Load state from model
-            description = selectedImage?.fulldescription ?? ""
-            project = selectedImage?.project
-            
-            showEditDetails = true
+        withAnimation {
+            if showEditDetails {
+                showEditDetails = false
+                
+                // Only save description and project
+                // Tags are already modified directly by TagsView!
+                selectedImage!.fulldescription = description
+                selectedImage!.project = project
+                
+                db.editImageItem()
+            } else {
+                // Load state from model
+                description = selectedImage?.fulldescription ?? ""
+                project = selectedImage?.project
+                
+                showEditDetails = true
+            }
         }
     }
 }
