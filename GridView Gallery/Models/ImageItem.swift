@@ -21,9 +21,10 @@ class ImageItem {
     @Transient private var cachedFullImage: UIImage?
 
     
-    init(imageData: Data, fulldescription: String? = nil, tags: [Tag] = [], createdAt: Date = Date()) {
+    init(imageData: Data, fulldescription: String? = nil, project: Project? = nil, tags: [Tag] = [], createdAt: Date = Date()) {
         self.imageData = imageData
         self.fulldescription = fulldescription
+        self.project = project
         self.tags = tags
         self.createdAt = createdAt
         

@@ -60,7 +60,7 @@ class DatabaseService {
         return data
     }
     
-    private func refreshAll() {
+    func refreshAll() {
         self.images = self.queryExtract(ImageItem.self)
         self.projects = self.queryExtract(Project.self)
         self.tags = self.queryExtract(Tag.self)

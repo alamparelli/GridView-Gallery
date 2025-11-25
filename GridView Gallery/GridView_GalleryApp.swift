@@ -8,6 +8,7 @@ import SwiftData
 @main
 struct GridView_GalleryApp: App {
     @State private var navigation = NavigationService()
+    @Environment(\.scenePhase) var scenePhase
     
     var database: DatabaseService
     let modelContainer: ModelContainer
@@ -37,5 +38,11 @@ struct GridView_GalleryApp: App {
         .environment(navigation)
         .environment(database)
         .modelContainer(modelContainer)
+        .onChange(of: scenePhase) { oldPhase, newPhase in
+            if newPhase == .active {
+                // Refresh data when app becomes active (e.g., returning from share extension)
+                database.refreshAll()
+            }
+        }
     }
 }

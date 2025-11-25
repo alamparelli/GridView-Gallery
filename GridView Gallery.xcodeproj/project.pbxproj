@@ -6,20 +6,88 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		E54A12B22ED5B11B0001B325 /* Share.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = E54A12A82ED5B11B0001B325 /* Share.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		E54A12B02ED5B11B0001B325 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E53DB4452EC4BEC90064CAC9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E54A12A72ED5B11B0001B325;
+			remoteInfo = Share;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		E54A12B72ED5B11B0001B325 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				E54A12B22ED5B11B0001B325 /* Share.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		E53DB44D2EC4BEC90064CAC9 /* GridView Gallery.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "GridView Gallery.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E54A12A82ED5B11B0001B325 /* Share.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Share.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		E54A12B32ED5B11B0001B325 /* Exceptions for "Share" folder in "Share" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = E54A12A72ED5B11B0001B325 /* Share */;
+		};
+		E54A12BB2ED5BC1C0001B325 /* Exceptions for "GridView Gallery" folder in "Share" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Models/ImageItem.swift,
+				Models/Project.swift,
+				Models/Tag.swift,
+				Resources/Assets.xcassets,
+				Services/DatabaseService.swift,
+			);
+			target = E54A12A72ED5B11B0001B325 /* Share */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		E53DB44F2EC4BEC90064CAC9 /* GridView Gallery */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				E54A12BB2ED5BC1C0001B325 /* Exceptions for "GridView Gallery" folder in "Share" target */,
+			);
 			path = "GridView Gallery";
+			sourceTree = "<group>";
+		};
+		E54A12A92ED5B11B0001B325 /* Share */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				E54A12B32ED5B11B0001B325 /* Exceptions for "Share" folder in "Share" target */,
+			);
+			path = Share;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		E53DB44A2EC4BEC90064CAC9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E54A12A52ED5B11B0001B325 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -33,6 +101,7 @@
 			isa = PBXGroup;
 			children = (
 				E53DB44F2EC4BEC90064CAC9 /* GridView Gallery */,
+				E54A12A92ED5B11B0001B325 /* Share */,
 				E53DB44E2EC4BEC90064CAC9 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,6 +110,7 @@
 			isa = PBXGroup;
 			children = (
 				E53DB44D2EC4BEC90064CAC9 /* GridView Gallery.app */,
+				E54A12A82ED5B11B0001B325 /* Share.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -55,10 +125,12 @@
 				E53DB4492EC4BEC90064CAC9 /* Sources */,
 				E53DB44A2EC4BEC90064CAC9 /* Frameworks */,
 				E53DB44B2EC4BEC90064CAC9 /* Resources */,
+				E54A12B72ED5B11B0001B325 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				E54A12B12ED5B11B0001B325 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				E53DB44F2EC4BEC90064CAC9 /* GridView Gallery */,
@@ -69,6 +141,28 @@
 			productName = "GridView Gallery";
 			productReference = E53DB44D2EC4BEC90064CAC9 /* GridView Gallery.app */;
 			productType = "com.apple.product-type.application";
+		};
+		E54A12A72ED5B11B0001B325 /* Share */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E54A12B42ED5B11B0001B325 /* Build configuration list for PBXNativeTarget "Share" */;
+			buildPhases = (
+				E54A12A42ED5B11B0001B325 /* Sources */,
+				E54A12A52ED5B11B0001B325 /* Frameworks */,
+				E54A12A62ED5B11B0001B325 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				E54A12A92ED5B11B0001B325 /* Share */,
+			);
+			name = Share;
+			packageProductDependencies = (
+			);
+			productName = Share;
+			productReference = E54A12A82ED5B11B0001B325 /* Share.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -81,6 +175,9 @@
 				LastUpgradeCheck = 2610;
 				TargetAttributes = {
 					E53DB44C2EC4BEC90064CAC9 = {
+						CreatedOnToolsVersion = 26.1;
+					};
+					E54A12A72ED5B11B0001B325 = {
 						CreatedOnToolsVersion = 26.1;
 					};
 				};
@@ -100,12 +197,20 @@
 			projectRoot = "";
 			targets = (
 				E53DB44C2EC4BEC90064CAC9 /* GridView Gallery */,
+				E54A12A72ED5B11B0001B325 /* Share */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		E53DB44B2EC4BEC90064CAC9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E54A12A62ED5B11B0001B325 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -122,7 +227,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E54A12A42ED5B11B0001B325 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		E54A12B12ED5B11B0001B325 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E54A12A72ED5B11B0001B325 /* Share */;
+			targetProxy = E54A12B02ED5B11B0001B325 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		E53DB4562EC4BEC90064CAC9 /* Debug */ = {
@@ -251,6 +371,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = GridViewIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "GridView Gallery/GridView Gallery.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3HB4KG375X;
@@ -289,6 +410,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = GridViewIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "GridView Gallery/GridView Gallery.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3HB4KG375X;
@@ -322,6 +444,64 @@
 			};
 			name = Release;
 		};
+		E54A12B52ED5B11B0001B325 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Share/Share.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3HB4KG375X;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Share/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Share;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "eu.lamparelli.GridView-Gallery.Share";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		E54A12B62ED5B11B0001B325 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Share/Share.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3HB4KG375X;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Share/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Share;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "eu.lamparelli.GridView-Gallery.Share";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -339,6 +519,15 @@
 			buildConfigurations = (
 				E53DB4592EC4BEC90064CAC9 /* Debug */,
 				E53DB45A2EC4BEC90064CAC9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E54A12B42ED5B11B0001B325 /* Build configuration list for PBXNativeTarget "Share" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E54A12B52ED5B11B0001B325 /* Debug */,
+				E54A12B62ED5B11B0001B325 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
