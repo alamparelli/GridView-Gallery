@@ -35,6 +35,14 @@ struct ContentView: View {
             }
         }
         .toolbar {
+            #if DEBUG
+            ToolbarItem {
+                Button("Debug", systemImage: "flame") {
+                    showDebug = true
+                }
+            }
+            #endif
+            
             if !db.images.isEmpty {
                 ToolbarItem {
                     Button(db.isEditing ? "Done" : "Edit" , systemImage: db.isEditing ? "checkmark" : "pencil") {
@@ -96,6 +104,9 @@ struct ContentView: View {
         .sheet(isPresented: $showMoveView) {
             MoveImagesView()
                 .presentationDetents([.medium])
+        }
+        .sheet(isPresented: $showDebug) {
+            DebugView()
         }
     }
 }

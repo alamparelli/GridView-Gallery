@@ -9,7 +9,7 @@ enum Destination: Hashable {
     case project(Project)
     case settings
     case search
-    case debug(ImageItem)
+    case debug
     case imageDetails(ImageItem, [ImageItem])
     
     // fill other depending your needs
@@ -27,7 +27,7 @@ class NavigationService {
         case . project(let project) : ProjectView(project: project)
         case .settings: SettingsView()
         case .search: SearchView()
-        case .debug(let image): DebugView(image: image)
+        case .debug: DebugView()
         case .imageDetails(let image, let images): ImageDetailView(image: image, images: images)
         }
     }

@@ -15,6 +15,9 @@ struct AddImageView: View {
     @State private var selectedImageData: [Data] = []
     @State private var pickerItems: [PhotosPickerItem] = []
     @State private var isLoading = false
+    @State private var showCamera = false
+    
+    @State private var imageData: UIImage?
     
     @Environment(\.dismiss) var dismiss
     
@@ -25,71 +28,80 @@ struct AddImageView: View {
         NavigationStack {
             ScrollView {
                 Form {
-                    if selectedImageData.isEmpty {
-                        VStack (alignment: .leading) {
-                            HStack {
-                                PhotosPicker(selection: $pickerItems, maxSelectionCount: 6, matching: .images , preferredItemEncoding: .compatible ) {
+                    VStack (alignment: .leading) {
+                        HStack {
+                            PhotosPicker(selection: $pickerItems, maxSelectionCount: 6, matching: .images , preferredItemEncoding: .compatible ) {
+                                if selectedImageData.isEmpty {
                                     Label("Add a photo", systemImage: "photo.on.rectangle")
                                         .labelStyle(.iconOnly)
-                                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                        .frame(width: 150, height: 100)
+                                        .overlay {
+                                            RoundedRectangle(cornerRadius: 10)
+                                                .stroke(.strokeBorder, lineWidth: 1)
+                                        }
                                         .contentShape(Rectangle())
+                                } else {
+                                    ZStack {
+                                        ForEach(Array(selectedImageData.enumerated()), id: \.offset) { index, imageData in
+                                            if let uiImage = UIImage(data: imageData)
+//                                               let thumbnailData = uiImage.jpegData(compressionQuality: 0.6),
+                                               /*let thumbnail = UIImage(data: uiImage)*/ {
+                                                Image(uiImage: uiImage)
+                                                    .resizable()
+                                                    .scaledToFill()
+                                                    .frame(width: 150, height: 100)
+                                                    .clipped()
+                                                    .clipShape(.rect(cornerRadius: 10))
+//                                                    .offset(x: offset * Double(index) - 5)
+    //                                                .rotationEffect(Angle(degrees: offset * Double(index) / 3 - 10))
+                                            }
+                                        }
+                                        
+                                        Text("\(selectedImageData.count)")
+                                            .foregroundStyle(.accentColorInverted)
+                                            .font(.largeTitle.bold())
+                                    }
+                                    .overlay {
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .stroke(.strokeBorder, lineWidth: 1)
+                                    }
+                                    .contentShape(Rectangle())
                                 }
-                                .frame(maxWidth: .infinity, minHeight: 100, maxHeight: 100)
-                                .overlay {
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .stroke(.strokeBorder, lineWidth: 1)
-                                }
-                                .contentShape(Rectangle())
-                                
-                                Button{
-                                    // Picture
-                                } label: {
+                            }
+                            .frame(width: 150, height: 100)
+                            
+                            Spacer()
+                            
+                            Button{
+                                showCamera = true
+                            } label: {
+                                if let image = imageData {
+                                    Image(uiImage: image)
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 150, height: 100)
+                                        .clipped()
+                                        .clipShape(.rect(cornerRadius: 10))
+                                } else {
                                     Label("Take a picture", systemImage: "camera")
                                         .labelStyle(.iconOnly)
-                                        .frame(maxWidth: .infinity, minHeight: 100)
+                                        .frame(width: 150, height: 100)
                                         .overlay {
                                             RoundedRectangle(cornerRadius: 10)
                                                 .stroke(.strokeBorder, lineWidth: 1)
                                         }
                                 }
-                                
                             }
-                            .padding()
-                            .frame(maxWidth: .infinity, minHeight: 100)
-                            .overlay {
-                                RoundedRectangle(cornerRadius: 10)
-                                    .stroke(.strokeBorder, lineWidth: 1)
-                            }
+
                         }
-                        .padding([.top, .bottom])
-                    } else {
-                        HStack {
-                            Spacer()
-                            
-                            PhotosPicker(selection: $pickerItems, maxSelectionCount: 6, matching: .images , preferredItemEncoding: .compatible ) {
-                                ZStack {
-                                    ForEach(Array(selectedImageData.enumerated()), id: \.offset) { index, imageData in
-                                        if let uiImage = UIImage(data: imageData),
-                                           let thumbnailData = uiImage.jpegData(compressionQuality: 0.8),
-                                           let thumbnail = UIImage(data: thumbnailData) {
-                                            Image(uiImage: thumbnail)
-                                                .resizable()
-                                                .scaledToFill()
-                                                .frame(width: 150, height: 100)
-                                                .clipped()
-                                                .clipShape(.rect(cornerRadius: 10))
-                                                .offset(x: offset * Double(index) - 5)
-//                                                .rotationEffect(Angle(degrees: offset * Double(index) / 3 - 10))
-                                        }
-                                    }
-                                }
-                            }
-                            
-                            Spacer()
+                        .padding()
+                        .frame(maxWidth: .infinity, minHeight: 100)
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(.strokeBorder, lineWidth: 1)
                         }
-                        .padding(.bottom)
-                        
                     }
+                    .padding([.top, .bottom])
                     
                     AddDetailsImageView(imageItem: nil, tags: $tags, project: $project, description: $description)
                 }
@@ -146,9 +158,30 @@ struct AddImageView: View {
         .onDisappear {
             UIScrollView.appearance().bounces = true
         }
+        .fullScreenCover(isPresented: $showCamera) {
+            ImagePickerView(image: $imageData)
+                .ignoresSafeArea()
+        }
     }
     
     func addImage() {
+        if let image = imageData?.jpegData(compressionQuality: 1.0) {
+            let img = ImageItem(imageData: image)
+            
+            if !description.isEmpty {
+                img.fulldescription = description
+            }
+            
+            // Use the @State tags directly (populated by TagsView via binding)
+            img.tags = tags
+            
+            if let prj = project {
+                img.project = prj
+            }
+            
+            db.addImageItem(img)
+        }
+        
         for imageData in selectedImageData {
             let img = ImageItem(imageData: imageData)
             

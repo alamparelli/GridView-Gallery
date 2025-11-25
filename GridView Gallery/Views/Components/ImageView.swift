@@ -12,7 +12,7 @@ struct ImageView: View {
     @State private var openDetails = false
     @State private var isTapped = false
     
-    @Namespace private var animation
+//    @Namespace private var animation
     
     var body: some View {
         if let uiImage = UIImage(data: image.thumbnailData) {
@@ -44,7 +44,7 @@ struct ImageView: View {
             }
             .sheet(isPresented: $openDetails) {
                 ImageDetailView(image: image, images: db.images)
-                    .navigationTransition(.zoom(sourceID: "zoom", in: animation))
+//                    .navigationTransition(.zoom(sourceID: "zoom", in: animation))
             }
         }
     }
