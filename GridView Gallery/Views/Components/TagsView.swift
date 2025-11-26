@@ -164,6 +164,13 @@ struct TagsView: View {
                 currentWord = newValue.split(separator: " ").last.map(String.init) ?? ""
             }
         }
+        .onDisappear {
+            // When TagsView is removed from view (because user clicked "Done"),
+            // ensure any pending tag changes are converted before saving
+            if isEditing && !useBinding {
+                convertTags()
+            }
+        }
         .animation(.default, value: tagSuggestions)
         .animation(.none, value: tagString)
     }
