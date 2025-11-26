@@ -106,6 +106,6 @@ struct ProjectsView: View {
     }
 }
 
-#Preview {
-    ProjectsView()
-}
+//#Preview {
+//    ProjectsView()
+//}

@@ -115,6 +115,6 @@ struct ProjectView: View {
     }
 }
 
-#Preview {
-    ProjectView(project: Project())
-}
+//#Preview {
+//    ProjectView(project: Project())
+//}

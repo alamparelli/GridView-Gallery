@@ -28,7 +28,7 @@ class ImageItem {
         self.tags = tags
         self.createdAt = createdAt
         
-        self.thumbnailData = Self.generateThumbnail(from: imageData)!
+        self.thumbnailData = Self.generateThumbnail(from: imageData) ?? Data()
     }
     
     var uiImage: UIImage? {

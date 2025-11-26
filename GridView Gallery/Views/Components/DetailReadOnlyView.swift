@@ -6,6 +6,8 @@ import SwiftUI
 struct DetailReadOnlyView: View {
     let image: ImageItem
     
+    @State private var description: String = ""
+    
     var body: some View {
         Section {
             HStack {
@@ -27,17 +29,34 @@ struct DetailReadOnlyView: View {
                 Text("Description")
                     .fontWeight(.semibold)
                 
-                Text(image.fulldescription ?? "")
-                    .multilineTextAlignment(.leading)
+                TextEditor(text: $description)
                     .font(.subheadline)
                     .padding(.horizontal, 4)
                     .frame(maxWidth: .infinity, minHeight: 75)
+                    .disabled(true)
                     .overlay {
                         RoundedRectangle(cornerRadius: 10)
                             .stroke(.strokeBorder, lineWidth: 1)
                     }
+                    .onAppear {
+                        description = image.fulldescription ?? ""
+                    }
+//
+//                Text(image.fulldescription ?? "")
+//                        .font(.subheadline)
+//                        .padding(.horizontal, 4)
+//                        .frame(maxWidth: .infinity, minHeight: 75)
+//                        .overlay {
+//                            RoundedRectangle(cornerRadius: 10)
+//                                .stroke(.strokeBorder, lineWidth: 1)
+//                        }
             }
         }
         .padding()
     }
 }
+
+
+//#Preview {
+//    DetailReadOnlyView()
+//}
