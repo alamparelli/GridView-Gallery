@@ -12,6 +12,8 @@ struct ImageDetailView: View {
     
     var image: ImageItem?
     var images: [ImageItem]
+    
+    @State private var tags: [Tag] = []
 
     @State private var selectedImageID: PersistentIdentifier?
     @State private var selectedImage: ImageItem?
@@ -207,6 +209,9 @@ struct ImageDetailView: View {
                 if let image = image {
                     selectedImageID = image.persistentModelID
                     selectedImage = image
+                    
+                    // set tags for binding
+                    tags = image.tags
                 }
             }
             .onDisappear {

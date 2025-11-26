@@ -178,6 +178,8 @@ struct TagsView: View {
             .filter { $0 != name }
         
         tagString = tempArray.joined(separator: " ") + " "
+        
+        convertTags()
     }
     
     func appendTag(_ tagName: String) {
