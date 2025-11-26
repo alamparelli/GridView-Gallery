@@ -17,6 +17,9 @@ struct TagsView: View {
     @FocusState private var isFocused: Bool
     @State private var tagString: String = ""
     
+    // tag proposal
+    @State private var currentWord: String = ""
+    
     // INIT 1: For editing existing images (ImageDetailView)
     init(image: ImageItem, showEditDetails: Bool = false) {
         self.image = image
@@ -36,6 +39,20 @@ struct TagsView: View {
         self.showEditDetails = showEditDetails
     }
     
+    private var tagSuggestions: [Tag] {
+        guard !currentWord.isEmpty else { return [] }
+        
+        let existingNames = Set(tags.map { $0.name.lowercased() })
+        
+        return db.tags
+            .filter { tag in
+                tag.name.lowercased().hasPrefix(currentWord.lowercased())
+                && !existingNames.contains(tag.name.lowercased())
+            }
+            .prefix(5)  // Limite à 5 suggestions
+            .map { $0 }
+    }
+    
     private var tags: [Tag] {
         if useBinding {
             return tagsBinding ?? []
@@ -51,7 +68,7 @@ struct TagsView: View {
             
             VStack {
                 if !isEditing {
-                    FlowLayout(mode: .scrollable, items: tags.sorted(by: { $0.name < $1.name }), itemSpacing: 4) {
+                    FlowLayout(mode: .scrollable, items: tags/*.sorted(by: { $0.name < $1.name })*/, itemSpacing: 4) {
                         Text("#\($0.name)")
                             .font(.subheadline)
                             .padding(.horizontal, 8)
@@ -92,6 +109,26 @@ struct TagsView: View {
                 RoundedRectangle(cornerRadius: 10)
                     .stroke(.strokeBorder, lineWidth: 1)
             }
+            
+            if isEditing && !tagSuggestions.isEmpty {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack {
+                        ForEach(tagSuggestions.sorted(by: { $0.name > $1.name })) { tag in
+                            Button {
+                                appendTag(tag.name)
+                            } label: {
+                                Text("#\(tag.name)")
+                                    .font(.subheadline)
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 4)
+                                    .background(Color.accentColorInverted.opacity(0.5))
+                                    .cornerRadius(20)
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+                }
+            }
         }
         .contentShape(Rectangle())
         .gesture(showEditDetails ? TapGesture().onEnded {
@@ -100,17 +137,33 @@ struct TagsView: View {
         } : nil)
         .onAppear(perform: showTags)
         .onChange(of: tags) { showTags() }
+        .onChange(of: tagString) { oldValue, newValue in
+            if newValue.hasSuffix(" ") {
+                currentWord = ""
+            } else {
+                currentWord = newValue.split(separator: " ").last.map(String.init) ?? ""
+            }        }
+        .animation(.default, value: tagSuggestions)
+    }
+    
+    func appendTag(_ tagName: String) {
+        var words = tagString.split(separator: " ").map(String.init)
+        if !words.isEmpty {
+            words.removeLast()
+        }
+        words.append(tagName)
+        tagString = words.joined(separator: " ") + " "
     }
     
     func showTags() {
-        tagString = tags.map({ $0.name }).joined(separator: ",")
+        tagString = tags.map({ $0.name }).joined(separator: " ")
     }
 
     func convertTags() {
         // Parse new tags
         let tagNames = Set(
             tagString.lowercased()
-                .split(separator: ",")
+                .split(separator: " ")
                 .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
                 .filter { !$0.isEmpty }
         )
