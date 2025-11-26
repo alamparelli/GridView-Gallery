@@ -46,7 +46,7 @@ struct TagsView: View {
         
         return db.tags
             .filter { tag in
-                tag.name.lowercased().hasPrefix(currentWord.lowercased())
+                tag.name.lowercased().contains(currentWord.lowercased())
                 && !existingNames.contains(tag.name.lowercased())
             }
             .prefix(5)  // Limite à 5 suggestions
@@ -61,6 +61,11 @@ struct TagsView: View {
         }
     }
     
+    private var filteredTags: [Tag] {
+        let tmpArray = tagString.split(separator: " ").map(String.init)
+        return tags.filter { tmpArray.contains($0.name) }
+    }
+    
     var body: some View {
         VStack (alignment: .leading) {
             Text("Tags")
@@ -68,18 +73,34 @@ struct TagsView: View {
             
             VStack {
                 if !isEditing {
-                    FlowLayout(mode: .scrollable, items: tags/*.sorted(by: { $0.name < $1.name })*/, itemSpacing: 4) {
-                        Text("#\($0.name)")
-                            .font(.subheadline)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 4)
-                            .background(Color.accentColorInverted.opacity(0.5))
-                            .cornerRadius(20)
-                    }
+                    FlowLayout(mode: .scrollable, items: filteredTags/*.sorted(by: { $0.name < $1.name })*/, itemSpacing: 4) { tag in
+                            ZStack (alignment: .trailing) {
+                                Text("#\(tag.name)")
+                                    .font(.subheadline)
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 4)
+                                    .padding(.trailing, showEditDetails ? 16 : 8)
+                                    .background(Color.accentColorInverted.opacity(0.5))
+                                    .cornerRadius(20)
+                                
+                                if showEditDetails {
+                                    Button {
+                                        removeTagFromSelection(tag)
+                                    } label: {
+                                        Label("Remove tag", systemImage: "x.circle.fill")
+                                            .labelStyle(.iconOnly)
+                                            .foregroundStyle(.secondary)
+                                            .font(.subheadline)
+                                            .padding(.trailing, 4)
+                                    }
+                                }
+                            }
+                        }
+                    
                 } else {
                     TextEditor(text: $tagString)
-                        .padding(.horizontal, 4)
-                        .padding(.vertical)
+                        .frame(maxWidth: .infinity, minHeight: 100, maxHeight: 200)
+                        .padding(4)
                         .focused($isFocused)
 //                    https://stackoverflow.com/questions/70318811/detecting-keyboard-submit-button-press-for-texteditor-swiftui
                         .onChange(of: tagString) {
@@ -98,13 +119,13 @@ struct TagsView: View {
                                 Label("Submit tags", systemImage: "checkmark")
                                     .labelStyle(.iconOnly)
                             }
-                            .padding()
+                            .padding(.horizontal)
                             .clipShape(.circle)
                         }
                 }
             }
             .padding(.horizontal, 4)
-            .frame(maxWidth: .infinity, minHeight: 75)
+            .frame(maxWidth: .infinity, minHeight: 100)
             .overlay {
                 RoundedRectangle(cornerRadius: 10)
                     .stroke(.strokeBorder, lineWidth: 1)
@@ -142,8 +163,21 @@ struct TagsView: View {
                 currentWord = ""
             } else {
                 currentWord = newValue.split(separator: " ").last.map(String.init) ?? ""
-            }        }
+            }
+        }
         .animation(.default, value: tagSuggestions)
+    }
+    
+    func removeTagFromSelection(_ tag: Tag) {
+        let name = tag.name
+        
+        let tempArray: [String] = tagString.lowercased()
+            .split(separator: " ")
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+            .filter { $0 != name }
+        
+        tagString = tempArray.joined(separator: " ") + " "
     }
     
     func appendTag(_ tagName: String) {
