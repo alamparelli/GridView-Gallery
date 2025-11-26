@@ -102,9 +102,9 @@ struct TagsView: View {
                         .padding(4)
                         .focused($isFocused)
 //                    https://stackoverflow.com/questions/70318811/detecting-keyboard-submit-button-press-for-texteditor-swiftui
-                        .onChange(of: tagString) {
+                        .onChange(of: tagString) {                            
+                            // Handle return key
                             if !tagString.filter({ $0.isNewline }).isEmpty {
-                                convertTags()
                                 self.isFocused = false
                                 self.isEditing = false
                             }
@@ -165,9 +165,8 @@ struct TagsView: View {
             }
         }
         .onDisappear {
-            // When TagsView is removed from view (because user clicked "Done"),
-            // ensure any pending tag changes are converted before saving
-            if isEditing && !useBinding {
+            // Final safety net: Convert any remaining text when view disappears
+            if !tagString.isEmpty {
                 convertTags()
             }
         }
