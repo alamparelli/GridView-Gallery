@@ -96,7 +96,6 @@ struct TagsView: View {
                                 }
                             }
                         }
-                    
                 } else {
                     TextEditor(text: $tagString)
                         .frame(maxWidth: .infinity, minHeight: 100, maxHeight: 200)
@@ -166,6 +165,7 @@ struct TagsView: View {
             }
         }
         .animation(.default, value: tagSuggestions)
+        .animation(.none, value: tagString)
     }
     
     func removeTagFromSelection(_ tag: Tag) {

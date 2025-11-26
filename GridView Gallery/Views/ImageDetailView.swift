@@ -216,7 +216,7 @@ struct ImageDetailView: View {
     }
     
     func doWork() {
-        withAnimation {
+//        withAnimation {
             if showEditDetails {
                 showEditDetails = false
                 
@@ -233,7 +233,7 @@ struct ImageDetailView: View {
                 
                 showEditDetails = true
             }
-        }
+//        }
     }
 }
 //#Preview {
