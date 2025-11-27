@@ -13,6 +13,10 @@ class Project: Comparable {
         name ?? "Unknown"
     }
     
+    var unwrappedImages: [ImageItem] {
+        images ?? []
+    }
+    
     init(name: String? = nil) {
         self.name = name
     }

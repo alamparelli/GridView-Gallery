@@ -21,6 +21,16 @@ struct ProjectView: View {
         project.images?.count == 0
     }
     
+    var filteredphotos: [ImageItem] {
+        if searchText.isEmpty {
+            return project.unwrappedImages
+        } else {
+            return project.unwrappedImages.filter {
+                $0.tags.contains(where: { $0.name.localizedStandardContains(searchText) }) || $0.fulldescription?.localizedStandardContains(searchText) == true
+            }
+        }
+    }
+    
     var body: some View {
         VStack {
             if project.images?.count == 0 {
@@ -30,8 +40,8 @@ struct ProjectView: View {
                     Text("Nothing to Show yet")
                 }
             } else {
-                StaggeredList(images: project.images!)
-                    .searchable(text: $searchText, prompt: "Search for a photo")
+                StaggeredList(images: filteredphotos)
+                    .searchable(text: $searchText, prompt: "Search for by tags or description")
                     .searchToolbarBehavior(.minimize)
             }
         }
