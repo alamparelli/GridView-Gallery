@@ -31,9 +31,12 @@ struct TagsView: View {
     // INIT 2: For creating new images (AddImageView)
     init(tags: Binding<[Tag]>, showEditDetails: Bool = false) {
         self.image = nil
-        self._tagsBinding = Binding(
+        // Wrap the non-optional binding into an optional binding
+        self._tagsBinding = Binding<[Tag]?>(
             get: { tags.wrappedValue },
-            set: { tags.wrappedValue = $0 ?? [] }
+            set: { newValue in
+                tags.wrappedValue = newValue ?? []
+            }
         )
         self.useBinding = true
         self.showEditDetails = showEditDetails
@@ -216,7 +219,7 @@ struct TagsView: View {
         // Update based on pattern
         if useBinding {
             // Pattern A: Update binding for AddImageView
-            tagsBinding = newTags
+            tagsBinding = newTags.isEmpty ? [] : newTags
         } else {
             // Pattern B: Update model directly for ImageDetailView
             if image?.tags == nil {
