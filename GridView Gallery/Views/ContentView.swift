@@ -35,18 +35,18 @@ struct ContentView: View {
             }
         }
         .toolbar {
-            #if DEBUG
-            ToolbarItem {
-                Button("Debug", systemImage: "flame") {
-                    showDebug = true
-                }
-            }
-            #endif
+//            #if DEBUG
+//            ToolbarItem {
+//                Button("Debug", systemImage: "flame") {
+//                    showDebug = true
+//                }
+//            }
+//            #endif
             
             if !db.images.isEmpty {
                 ToolbarItem {
-                    Button(db.isEditing ? "Done" : "Edit" , systemImage: db.isEditing ? "checkmark" : "pencil") {
-                        db.isEditing.toggle()
+                    Button(db.isEditingImages ? "Done" : "Edit" , systemImage: db.isEditingImages ? "checkmark" : "pencil") {
+                        db.isEditingImages.toggle()
                         db.resetSelectedImagesWhenEditingList()
                     }
                 }
@@ -54,7 +54,7 @@ struct ContentView: View {
             
             ToolbarSpacer(.flexible)
             
-            if !db.isEditing {
+            if !db.isEditingImages {
                 ToolbarItem {
                     Button {
                         showAddImage = true
@@ -65,7 +65,7 @@ struct ContentView: View {
                 }
             }
         
-            if db.isEditing && !db.selectedImagesWhenEditingList.isEmpty {
+            if db.isEditingImages && !db.selectedImagesWhenEditingList.isEmpty {
                 ToolbarItem {
                     Button("Delete", systemImage: "trash", role: .destructive) {
                         showDeleteConfirmation = true
@@ -90,13 +90,13 @@ struct ContentView: View {
         }
         .onChange(of: db.images) {
             if db.images.isEmpty {
-                db.isEditing = false
+                db.isEditingImages = false
             }
         }
         .onDisappear {
-            db.isEditing = false
+            db.isEditingImages = false
         }
-        .animation(.bouncy, value: db.isEditing)
+        .animation(.bouncy, value: db.isEditingImages)
         .navigationTitle("Home")
         .sheet(isPresented: $showAddImage) {
             AddImageView()

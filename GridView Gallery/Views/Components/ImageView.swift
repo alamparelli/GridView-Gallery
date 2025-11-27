@@ -27,13 +27,13 @@ struct ImageView: View {
                         actionButton(image)
                     }
 
-                if db.isEditing {
+                if db.isEditingImages {
                     SelectionView(isSelected: isSelected)
                         .padding()
                 }
             }
-            .onChange(of: db.isEditing) {
-                if !db.isEditing{
+            .onChange(of: db.isEditingImages) {
+                if !db.isEditingImages{
                     isSelected = false
                 }
             }
@@ -52,7 +52,7 @@ struct ImageView: View {
     func actionButton(_ image: ImageItem) {
         withAnimation(.smooth(duration: 0.1)) {
             isTapped = true
-            if db.isEditing {
+            if db.isEditingImages {
                 if isSelected {
                     isSelected = false
                     db.selectedImagesWhenEditingList.remove(image)

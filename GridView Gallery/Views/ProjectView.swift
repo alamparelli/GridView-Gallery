@@ -13,7 +13,7 @@ struct ProjectView: View {
     @State private var showAddImage = false
     @State private var searchText: String = ""
     
-    @State private var isEditing = false
+    @State private var isEditingProjects = false
     @State private var showMoveView = false
     @State private var showDeleteConfirmation: Bool = false
     
@@ -51,8 +51,8 @@ struct ProjectView: View {
         .toolbar {
             if !projectIsEmpty {
                 ToolbarItem {
-                    Button(db.isEditing ? "Done" : "Edit" , systemImage: db.isEditing ? "checkmark" : "pencil") {
-                        db.isEditing.toggle()
+                    Button(db.isEditingProjects ? "Done" : "Edit" , systemImage: db.isEditingProjects ? "checkmark" : "pencil") {
+                        db.isEditingProjects.toggle()
                         db.resetSelectedImagesWhenEditingList()
                     }
                 }
@@ -60,7 +60,7 @@ struct ProjectView: View {
             
             ToolbarSpacer(.flexible)
             
-            if !db.isEditing {
+            if !db.isEditingProjects {
                 ToolbarItem {
                     Button {
                         showAddImage = true
@@ -71,7 +71,7 @@ struct ProjectView: View {
                 }
             }
         
-            if db.isEditing && !db.selectedImagesWhenEditingList.isEmpty {
+            if db.isEditingProjects && !db.selectedImagesWhenEditingList.isEmpty {
                 ToolbarItem {
                     Button("Delete", systemImage: "trash", role: .destructive) {
                         showDeleteConfirmation = true
@@ -99,11 +99,11 @@ struct ProjectView: View {
         }
         .onChange(of: project.images) {
             if projectIsEmpty {
-                db.isEditing = false
+                db.isEditingProjects = false
             }
         }
         .onDisappear {
-            db.isEditing = false
+            db.isEditingProjects = false
         }
         .onAppear{
             if let pName = project.name {
@@ -114,7 +114,7 @@ struct ProjectView: View {
             project.name = newValue
             db.editProject()
         }
-        .animation(.bouncy, value: db.isEditing)
+        .animation(.bouncy, value: db.isEditingProjects)
         .sheet(isPresented: $showMoveView) {
             MoveImagesView()
                 .presentationDetents([.medium])

@@ -97,13 +97,13 @@ struct ProjectSquareView: View {
                     actionButton(project)
                 }
             
-            if db.isEditing {
+            if db.isEditingProjects {
                 SelectionView(isSelected: isSelected)
                     .padding()
             }
         }
-        .onChange(of: db.isEditing) {
-            if !db.isEditing{
+        .onChange(of: db.isEditingProjects) {
+            if !db.isEditingProjects{
                 isSelected = false
             }
         }
@@ -117,7 +117,7 @@ struct ProjectSquareView: View {
     func actionButton(_ project: Project) {
         withAnimation(.smooth(duration: 0.1)) {
             isTapped = true
-            if db.isEditing {
+            if db.isEditingProjects {
                     if isSelected {
                         isSelected = false
                         db.selectedProjectsWhenEditingList.remove(project)

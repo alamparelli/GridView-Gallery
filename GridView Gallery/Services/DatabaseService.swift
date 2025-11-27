@@ -17,7 +17,10 @@ class DatabaseService {
     // Editbutton
     var selectedImagesWhenEditingList = Set<ImageItem>()
     var selectedProjectsWhenEditingList: Set<Project> = []
-    var isEditing = false
+
+    var isEditingImages = false
+    var isEditingProjects = false
+    
     var resetSelectedItems = false
     var resetSelectedProjects = false
     var projectToUpdate: Project?
@@ -61,21 +64,33 @@ class DatabaseService {
     }
     
     func refreshAll() {
-        self.images = self.queryExtract(ImageItem.self)
-        self.projects = self.queryExtract(Project.self)
-        self.tags = self.queryExtract(Tag.self)
+        refreshTags()
+        refreshTags()
+        refreshProjects()
+    }
+    
+    private func cleanTags() {
+        for tag in tags {
+            if tag.imagesCount == 0 {
+                context.delete(tag)
+            }
+        }
+        save()
     }
     
     private func refreshImages() {
         self.images = self.queryExtract(ImageItem.self)
+        self.cleanTags()
     }
     
     private func refreshProjects() {
         self.projects = self.queryExtract(Project.self)
+        self.cleanTags()
     }
     
     private func refreshTags() {
         self.tags = self.queryExtract(Tag.self)
+        self.cleanTags()
     }
     
     private func queryExtract<T: PersistentModel>(_ type : T.Type) -> [T] {

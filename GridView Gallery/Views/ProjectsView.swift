@@ -15,7 +15,7 @@ struct ProjectsView: View {
         GridItem(.flexible()),
     ]
     
-    @State private var isEditing = false
+    @State private var isEditingProjects = false
     @State private var showMoveView = false
     @State private var showDeleteConfirmation: Bool = false
     
@@ -58,8 +58,8 @@ struct ProjectsView: View {
         .toolbar {
             if !isProjectsEmpty {
                 ToolbarItem {
-                    Button(db.isEditing ? "Done" : "Edit" , systemImage: db.isEditing ? "checkmark" : "pencil") {
-                        db.isEditing.toggle()
+                    Button(db.isEditingProjects ? "Done" : "Edit" , systemImage: db.isEditingProjects ? "checkmark" : "pencil") {
+                        db.isEditingProjects.toggle()
                         db.resetSelectedProjectsWhenEditingList()
                     }
                 }
@@ -67,7 +67,7 @@ struct ProjectsView: View {
             
             ToolbarSpacer(.flexible)
             
-            if !db.isEditing {
+            if !db.isEditingProjects {
                 ToolbarItem {
                     Button {
                         showAddProject = true
@@ -78,7 +78,7 @@ struct ProjectsView: View {
                 }
             }
             
-            if db.isEditing && !db.selectedProjectsWhenEditingList.isEmpty {
+            if db.isEditingProjects && !db.selectedProjectsWhenEditingList.isEmpty {
                 ToolbarItem {
                     Button("Delete", systemImage: "trash", role: .destructive) {
                         showDeleteConfirmation = true
@@ -101,7 +101,7 @@ struct ProjectsView: View {
                 .presentationDetents([.fraction(0.25)])
         }
         .onDisappear {
-            db.isEditing = false
+            db.isEditingProjects = false
         }
     }
 }
