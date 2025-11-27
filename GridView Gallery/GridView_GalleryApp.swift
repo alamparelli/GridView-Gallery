@@ -24,10 +24,33 @@ struct GridView_GalleryApp: App {
         
         database = DatabaseService(context: modelContainer.mainContext)
     }
+    
+    /// User's preferred theme setting stored persistently
+    @AppStorage("GridViewTheme") private var selectedTheme: String = "Dynamic"
+    
+    /**
+     Computed property that converts the string-based theme preference to SwiftUI's ColorScheme.
+     
+     - Returns: Optional ColorScheme based on user preference
+       - "Light": Returns .light for light mode
+       - "Dark": Returns .dark for dark mode
+       - "Dynamic" or any other value: Returns .none for system preference
+     */
+    var themeChoosen: ColorScheme? {
+        switch selectedTheme {
+        case "Light":
+            return .light
+        case "Dark":
+            return .dark
+        default:
+            return .none
+        }
+    }
 
     var body: some Scene {
         WindowGroup {
             TabControllerView(ns: navigation)
+                .preferredColorScheme(themeChoosen)
 //            NavigationStack(path: $navigation.path) {
 //                TabControllerView()
 //            }
@@ -35,6 +58,7 @@ struct GridView_GalleryApp: App {
 //                navigation.returnView(destination)
 //            }
         }
+
         .environment(navigation)
         .environment(database)
         .modelContainer(modelContainer)
