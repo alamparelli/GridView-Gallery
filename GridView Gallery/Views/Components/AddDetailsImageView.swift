@@ -7,8 +7,7 @@ import SwiftUI
 struct AddDetailsImageView: View {
     @Environment(DatabaseService.self) var db
     
-    var imageItem: ImageItem?  // For ImageDetailView (editing existing)
-    @Binding var tags: [Tag]   // For AddImageView (creating new)
+    @Binding var imageItem: ImageItem?
     
     @Binding var project: Project?
     @Binding var description: String
@@ -37,15 +36,8 @@ struct AddDetailsImageView: View {
                         .stroke(.strokeBorder, lineWidth: 1)
                 }
             }
-
-            // Use appropriate initializer based on context
-            if let imageItem = imageItem {
-                // Editing existing image - modify model directly
-                TagsView(image: imageItem, showEditDetails: showEditDetails)
-            } else {
-                // Creating new image - use binding
-                TagsView(tags: $tags, showEditDetails: showEditDetails)
-            }
+            
+            TagsView(image: $imageItem, showEditDetails: showEditDetails)
             
             VStack (alignment: .leading) {
                 Text("Description")

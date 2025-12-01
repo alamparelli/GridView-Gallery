@@ -4,7 +4,7 @@
 import SwiftUI
 
 struct DetailReadOnlyView: View {
-    let image: ImageItem
+    @Binding var image: ImageItem?
     
     @State private var description: String = ""
     
@@ -13,7 +13,7 @@ struct DetailReadOnlyView: View {
             HStack {
                 Text("Project")
                 Spacer()
-                Text(image.project?.name ?? "None")
+                Text(image?.project?.name ?? "None")
             }
             .pickerStyle(.navigationLink)
             .font(.subheadline)
@@ -23,7 +23,7 @@ struct DetailReadOnlyView: View {
                     .stroke(.strokeBorder, lineWidth: 1)
             }
 
-            TagsView(image: image)
+            TagsView(image: $image)
             
             VStack (alignment: .leading) {
                 Text("Description")
@@ -39,7 +39,9 @@ struct DetailReadOnlyView: View {
                             .stroke(.strokeBorder, lineWidth: 1)
                     }
                     .onAppear {
-                        description = image.fulldescription ?? ""
+                        if let image = image {
+                            description = image.fulldescription ?? ""
+                        }
                     }
 //
 //                Text(image.fulldescription ?? "")

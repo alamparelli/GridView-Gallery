@@ -35,13 +35,13 @@ struct ContentView: View {
             }
         }
         .toolbar {
-//            #if DEBUG
-//            ToolbarItem {
-//                Button("Debug", systemImage: "flame") {
-//                    showDebug = true
-//                }
-//            }
-//            #endif
+            #if DEBUG
+            ToolbarItem {
+                Button("Debug", systemImage: "flame") {
+                    showDebug = true
+                }
+            }
+            #endif
             
             if !db.images.isEmpty {
                 ToolbarItem {

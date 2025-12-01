@@ -10,8 +10,10 @@ struct SearchView: View {
     @Environment(DatabaseService.self) var db
 
     @State private var searchText: String = ""
+    
     var topTags: [Tag] {
-        return db.tags
+        return db.getTags()
+            .filter({$0.imagesCount > 0})
             .sorted(by: { $0.imagesCount > $1.imagesCount })
             .prefix(5)
             .map { $0 }
@@ -47,18 +49,20 @@ struct SearchView: View {
             if searchText.isEmpty {
                 VStack(alignment: .leading, spacing: 8) {
                     Group {
-                        Text("Recent Searches")
-                            .fontWeight(.semibold)
-                        
-                        ForEach(recentSearches, id:\.self) { recent in
-                            Button {
-                                searchText = recent
-                            } label: {
-                                Text("\(recent)")
-                                    .foregroundStyle(.secondary)
+                        if !recentSearches.isEmpty {
+                            Text("Recent Searches")
+                                .fontWeight(.semibold)
+                            
+                            ForEach(recentSearches, id:\.self) { recent in
+                                Button {
+                                    searchText = recent
+                                } label: {
+                                    Text("\(recent)")
+                                        .foregroundStyle(.secondary)
+                                }
                             }
                         }
-                        
+
                         Text("Top Tags")
                             .fontWeight(.semibold)
                         

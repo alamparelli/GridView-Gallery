@@ -11,7 +11,6 @@ class DatabaseService {
     let context: ModelContext
     
     var images: [ImageItem] = []
-    var tags: [Tag] = []
     var projects: [Project] = []
     
     // Editbutton
@@ -72,22 +71,11 @@ class DatabaseService {
     
     func refreshAll() {
         refreshImages()
-        refreshTags()
-    }
-    
-    private func cleanTags() {
-        for tag in tags {
-            if tag.imagesCount == 0 {
-                context.delete(tag)
-            }
-        }
-        save()
     }
     
     private func refreshImages() {
         images = queryExtract(ImageItem.self)
         refreshProjects()
-        cleanTags()
     }
     
     private func refreshProjects() {
@@ -96,13 +84,6 @@ class DatabaseService {
         for project in projects {
             updateLayout(for: project)
         }
-        
-        cleanTags()
-    }
-    
-    private func refreshTags() {
-        tags = queryExtract(Tag.self)
-        cleanTags()
     }
     
     private func queryExtract<T: PersistentModel>(_ type : T.Type) -> [T] {
@@ -122,10 +103,24 @@ class DatabaseService {
         try? context.save()
     }
     
+    func getTags() -> [Tag] {
+        let descriptor = FetchDescriptor<Tag>(predicate: #Predicate { _ in true})
+        var data: [Tag] = []
+        
+        do {
+            data = try context.fetch(descriptor)
+        } catch {
+            print("Error fetching notes: \(error)")
+        }
+        
+        return data
+    }
+    
     func addImageItem(_ imageItem: ImageItem) {
         context.insert(imageItem)
         save()
         refreshImages()
+        
     }
     
     func editImageItem() {
@@ -134,6 +129,8 @@ class DatabaseService {
     }
     
     func removeImageItem(_ imageItem: ImageItem) {
+        print(imageItem.tags)
+        
         context.delete(imageItem)
         save()
         refreshImages()
@@ -152,19 +149,41 @@ class DatabaseService {
         resetSelectedImagesWhenEditingList()
     }
     
-    func addTag(_ tag: Tag) {
-        context.insert(tag)
+    private func cleanTags() {
+        let descriptor = FetchDescriptor<Tag>(predicate: #Predicate { _ in true})
+        var data: [Tag] = []
+        
+        do {
+            data = try context.fetch(descriptor)
+        } catch {
+            print("Error fetching notes: \(error)")
+        }
+        
+        for tag in data {
+            if tag.imagesCount == 0 {
+                context.delete(tag)
+            }
+        }
+        
         save()
-        refreshTags()
     }
     
     func checkTag(_ name: String) -> Tag {
-        if tags.filter({$0.name == name}).isEmpty {
-            let tag = Tag(name: name)
-            addTag(tag)
-            return tag
+        cleanTags()
+        
+        let descriptor = FetchDescriptor<Tag>(predicate: #Predicate { $0.name == name})
+        var data: [Tag] = []
+        
+        do {
+            data = try context.fetch(descriptor)
+        } catch {
+            print("Error fetching notes: \(error)")
+        }
+        
+        if data.contains(where: { $0.name == name }) {
+            return data.first!
         } else {
-            let tag = tags.filter({$0.name == name}).first!
+            let tag = Tag(name: name)
             return tag
         }
     }

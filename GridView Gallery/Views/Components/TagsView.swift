@@ -6,67 +6,42 @@ import SwiftUI
 
 struct TagsView: View {
     // Support BOTH patterns
-    private var image: ImageItem?
-    @Binding private var tagsBinding: [Tag]?
-    private let useBinding: Bool
+    @Binding var image: ImageItem?
     
     @State private var isEditing = false
     var showEditDetails = false
     
     @Environment(DatabaseService.self) var db
+    
     @FocusState private var isFocused: Bool
     @State private var tagString: String = ""
     
     // tag proposal
     @State private var currentWord: String = ""
     
-    // INIT 1: For editing existing images (ImageDetailView)
-    init(image: ImageItem, showEditDetails: Bool = false) {
-        self.image = image
-        self._tagsBinding = .constant(nil)
-        self.useBinding = false
-        self.showEditDetails = showEditDetails
-    }
-    
-    // INIT 2: For creating new images (AddImageView)
-    init(tags: Binding<[Tag]>, showEditDetails: Bool = false) {
-        self.image = nil
-        // Wrap the non-optional binding into an optional binding
-        self._tagsBinding = Binding<[Tag]?>(
-            get: { tags.wrappedValue },
-            set: { newValue in
-                tags.wrappedValue = newValue ?? []
-            }
-        )
-        self.useBinding = true
-        self.showEditDetails = showEditDetails
-    }
-    
     private var tagSuggestions: [Tag] {
         guard !currentWord.isEmpty else { return [] }
+        guard let image = image else { return [] }
         
-        let existingNames = Set(tags.map { $0.name.lowercased() })
+        let existingNames = Set(image.tags.map { $0.name.lowercased() })
         
-        return db.tags
+        return db.getTags()
             .filter { tag in
-                tag.name.lowercased().contains(currentWord.lowercased())
+                tag.name.lowercased().localizedStandardContains(currentWord)
                 && !existingNames.contains(tag.name.lowercased())
             }
             .prefix(5)  // Limite à 5 suggestions
             .map { $0 }
     }
     
-    private var tags: [Tag] {
-        if useBinding {
-            return tagsBinding ?? []
-        } else {
-            return image?.tags ?? []
-        }
-    }
-    
-    private var filteredTags: [Tag] {
-        let tmpArray = tagString.split(separator: " ").map(String.init)
-        return tags.filter { tmpArray.contains($0.name) }
+    private var filteredTags: [String] {
+//        guard let image = image else { return [] }
+        
+        return tagString.split(separator: " ").map(String.init)
+        
+//        return image.tags.filter { tag in
+//            tmpArray.contains(tag.name)
+//        }
     }
     
     var body: some View {
@@ -78,7 +53,7 @@ struct TagsView: View {
                 if !isEditing {
                     FlowLayout(mode: .scrollable, items: filteredTags/*.sorted(by: { $0.name < $1.name })*/, itemSpacing: 4) { tag in
                             ZStack (alignment: .trailing) {
-                                Text("#\(tag.name)")
+                                Text("#\(tag)")
                                     .font(.subheadline)
                                     .padding(.horizontal, 8)
                                     .padding(.vertical, 4)
@@ -108,6 +83,7 @@ struct TagsView: View {
                         .onChange(of: tagString) {                            
                             // Handle return key
                             if !tagString.filter({ $0.isNewline }).isEmpty {
+                                convertTags()
                                 self.isFocused = false
                                 self.isEditing = false
                             }
@@ -159,26 +135,22 @@ struct TagsView: View {
             self.isFocused.toggle()
         } : nil)
         .onAppear(perform: showTags)
-        .onChange(of: tags) { showTags() }
+        .onChange(of: image?.tags) { showTags() }
         .onChange(of: tagString) { oldValue, newValue in
             if newValue.hasSuffix(" ") {
                 currentWord = ""
+                convertTags()
             } else {
                 currentWord = newValue.split(separator: " ").last.map(String.init) ?? ""
-            }
-        }
-        .onDisappear {
-            // Final safety net: Convert any remaining text when view disappears
-            if !tagString.isEmpty {
-                convertTags()
             }
         }
         .animation(.default, value: tagSuggestions)
         .animation(.none, value: tagString)
     }
-    
-    func removeTagFromSelection(_ tag: Tag) {
-        let name = tag.name
+  
+        func removeTagFromSelection(_ tag: String) {
+//    func removeTagFromSelection(_ tag: Tag) {
+        let name = tag
         
         let tempArray: [String] = tagString.lowercased()
             .split(separator: " ")
@@ -198,10 +170,13 @@ struct TagsView: View {
         }
         words.append(tagName)
         tagString = words.joined(separator: " ") + " "
+        convertTags()
     }
     
     func showTags() {
-        tagString = tags.map({ $0.name }).joined(separator: " ")
+        if let tags = image?.tags {
+            tagString = tags.map({ $0.name }).joined(separator: " ")
+        }
     }
 
     func convertTags() {
@@ -213,19 +188,6 @@ struct TagsView: View {
                 .filter { !$0.isEmpty }
         )
         
-        // Get/create Tag objects
-        let newTags = tagNames.map { db.checkTag(String($0)) }
-        
-        // Update based on pattern
-        if useBinding {
-            // Pattern A: Update binding for AddImageView
-            tagsBinding = newTags.isEmpty ? [] : newTags
-        } else {
-            // Pattern B: Update model directly for ImageDetailView
-            if image?.tags == nil {
-                image?.tags = []
-            }
-            image?.tags = newTags
-        }
+        image?.tags = tagNames.map { db.checkTag(String($0)) }
     }
 }

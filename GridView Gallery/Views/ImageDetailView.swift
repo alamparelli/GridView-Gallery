@@ -12,8 +12,6 @@ struct ImageDetailView: View {
     
     var image: ImageItem?
     var images: [ImageItem]
-    
-    @State private var tags: [Tag] = []
 
     @State private var selectedImageID: PersistentIdentifier?
     @State private var selectedImage: ImageItem?
@@ -130,10 +128,10 @@ struct ImageDetailView: View {
                                     
                                     if !fullScreen {
                                         if showEditDetails {
-                                            AddDetailsImageView(imageItem: img, tags: .constant([]), project: $project, description: $description)
+                                            AddDetailsImageView(imageItem: $selectedImage, project: $project, description: $description)
                                                 .padding()
                                         } else {
-                                            DetailReadOnlyView(image: img)
+                                            DetailReadOnlyView(image: $selectedImage)
                                         }
                                     }
                                 }
@@ -144,7 +142,6 @@ struct ImageDetailView: View {
                         }
                     }
                     .tabViewStyle(.page(indexDisplayMode: showEditDetails ? .never : .automatic))
-                    //                .ignoresSafeArea(edges: .top)
                     .highPriorityGesture(
                         showEditDetails ? DragGesture() : nil
                     )
@@ -174,7 +171,7 @@ struct ImageDetailView: View {
                                 Spacer()
                                 
                                 Button {
-                                    doWork()
+                                    editAction()
                                 } label: {
                                     Label(showEditDetails ? "Done" : "Edit" , systemImage: showEditDetails ? "square.and.arrow.down" : "pencil")
                                         .labelStyle(.iconOnly)
@@ -192,10 +189,20 @@ struct ImageDetailView: View {
                 }
             }
             .onChange(of: image) {
-                selectedImage = image
                 selectedImageID = image?.id
             }
             .onChange(of: selectedImageID) { oldValue, newValue in
+                if let newID = newValue,
+                   let newImage = images.first(where: { $0.persistentModelID == newID }) {
+                    selectedImage = newImage
+
+                    // Si on est en mode édition, mettre à jour aussi les champs
+                    if showEditDetails {
+                        description = newImage.fulldescription ?? ""
+                        project = newImage.project
+                    }
+                }
+
                 // Reset zoom when changing photos
                 lastScale = 1.0
                 scale = 1.0
@@ -211,7 +218,7 @@ struct ImageDetailView: View {
                     selectedImage = image
                     
                     // set tags for binding
-                    tags = image.tags
+//                    tags = image.tags
                 }
             }
             .onDisappear {
@@ -220,13 +227,12 @@ struct ImageDetailView: View {
         }
     }
     
-    func doWork() {
+    func editAction() {
 //        withAnimation {
             if showEditDetails {
                 showEditDetails = false
                 
                 // Only save description and project
-                // Tags are already modified directly by TagsView!
                 selectedImage!.fulldescription = description
                 selectedImage!.project = project
                 
@@ -235,6 +241,7 @@ struct ImageDetailView: View {
                 // Load state from model
                 description = selectedImage?.fulldescription ?? ""
                 project = selectedImage?.project
+//                tags = selectedImage?.tags ?? []
                 
                 showEditDetails = true
             }

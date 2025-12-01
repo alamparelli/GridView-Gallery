@@ -10,7 +10,8 @@ struct AddImageView: View {
     @Environment(DatabaseService.self) var db
     
     @State var project: Project?
-    @State private var tags: [Tag] = []
+    @State private var image: ImageItem?
+    
     @State private var description = ""
     @State private var selectedImageData: [Data] = []
     @State private var pickerItems: [PhotosPickerItem] = []
@@ -23,6 +24,10 @@ struct AddImageView: View {
     
     let colorsList: [Color] = [Color.red, Color.blue, Color.green, Color.yellow]
     @State private var offset = 10.0
+    
+    var disableSave: Bool {
+        return isLoading && selectedImageData.isEmpty && imageData == nil
+    }
     
     var body: some View {
         NavigationStack {
@@ -103,7 +108,7 @@ struct AddImageView: View {
                     }
                     .padding([.top, .bottom])
                     
-                    AddDetailsImageView(imageItem: nil, tags: $tags, project: $project, description: $description)
+                    AddDetailsImageView(imageItem: $image, project: $project, description: $description)
                 }
                 .padding(.horizontal)
                 .navigationTitle("Add Image")
@@ -126,7 +131,7 @@ struct AddImageView: View {
                                 .labelStyle(.iconOnly)
                                 .foregroundStyle(.accent)
                         }
-                        .disabled(isLoading)
+                        .disabled(disableSave)
                         .tint(.accentColorInverted)
                         .buttonStyle(.borderedProminent)
                     }
@@ -154,6 +159,8 @@ struct AddImageView: View {
         }
         .onAppear {
             UIScrollView.appearance().bounces = false
+            
+            image = ImageItem(imageData: Data(),fulldescription: "dummy")
         }
         .onDisappear {
             UIScrollView.appearance().bounces = true
@@ -165,38 +172,39 @@ struct AddImageView: View {
     }
     
     func addImage() {
-        if let image = imageData?.jpegData(compressionQuality: 1.0) {
-            let img = ImageItem(imageData: image)
+        // camera image
+        if let imageData = imageData?.jpegData(compressionQuality: 1.0) {
+//            image = ImageItem(imageData: imageData)
+            image?.imageData = imageData
+//            let img = ImageItem(imageData: imageData)
             
             if !description.isEmpty {
-                img.fulldescription = description
+                image?.fulldescription = description
             }
-            
-            // Use the @State tags directly (populated by TagsView via binding)
-            img.tags = tags
             
             if let prj = project {
-                img.project = prj
+                image?.project = prj
             }
             
-            db.addImageItem(img)
-        }
-        
-        for imageData in selectedImageData {
-            let img = ImageItem(imageData: imageData)
-            
-            if !description.isEmpty {
-                img.fulldescription = description
+            db.addImageItem(image!)
+        } else {
+            for imageData in selectedImageData {
+                let img = ImageItem(imageData: imageData)
+                
+                if !description.isEmpty {
+                    img.fulldescription = description
+                }
+                
+                if let prj = project {
+                    img.project = prj
+                }
+                
+                img.tags = image!.tags
+                
+                db.addImageItem(img)
             }
             
-            // Use the @State tags directly (populated by TagsView via binding)
-            img.tags = tags
-            
-            if let prj = project {
-                img.project = prj
-            }
-            
-            db.addImageItem(img)
+            db.removeImageItem(image!)
         }
         
         pickerItems = []
