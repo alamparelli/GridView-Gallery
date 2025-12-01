@@ -17,15 +17,16 @@ struct ImageView: View {
     var body: some View {
         if let uiImage = UIImage(data: image.thumbnailData) {
             ZStack (alignment: .topTrailing) {
-                Image(uiImage: uiImage)
-                    .resizable()
-                    .scaledToFit()
-                    .clipped()
-                    .clipShape(.rect(cornerRadius: 10))
-                    .scaleEffect(isTapped ? 0.99 : 1.0 )
-                    .onTapGesture {
-                        actionButton(image)
-                    }
+                Button{
+                    actionButton(image)
+                } label: {
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .scaledToFit()
+                        .clipped()
+                        .clipShape(.rect(cornerRadius: 10))
+                        .scaleEffect(isTapped ? 0.99 : 1.0 )
+                }
 
                 if db.isEditingImages {
                     SelectionView(isSelected: isSelected)

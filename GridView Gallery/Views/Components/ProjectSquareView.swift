@@ -39,69 +39,71 @@ struct ProjectSquareView: View {
     }
     
     var body: some View {
-        ZStack (alignment: .topTrailing) {
-            VStack (alignment: .leading, spacing: 4) {
-                if images.isEmpty {
-                    HStack (spacing: 0) {
-                        Rectangle()
-                            .fill(Color.gray.opacity(0.1))
-                    }
-                    .frame(width: 180, height: 173)
-                    .cornerRadius(10)
-                } else {
-                    switch id {
-                    case 1:
+        Button {
+            actionButton(project)
+        } label: {
+            ZStack (alignment: .topTrailing) {
+                VStack (alignment: .leading, spacing: 4) {
+                    if images.isEmpty {
                         HStack (spacing: 0) {
-                            ImageItemView(index: 0, images: images, width: 180, height: 173)
+                            Rectangle()
+                                .fill(Color.gray.opacity(0.1))
                         }
                         .frame(width: 180, height: 173)
                         .cornerRadius(10)
-                    case 2:
-                        HStack (spacing: 0) {
-                            ImageItemView(index: 0, images: images, width: 90, height: 173)
+                    } else {
+                        switch id {
+                        case 1:
+                            HStack (spacing: 0) {
+                                ImageItemView(index: 0, images: images, width: 180, height: 173)
+                            }
+                            .frame(width: 180, height: 173)
+                            .cornerRadius(10)
+                        case 2:
+                            HStack (spacing: 0) {
+                                ImageItemView(index: 0, images: images, width: 90, height: 173)
 
-                            VStack (spacing: 0) {
-                                ImageItemView(index: 1, images: images, width: 90, height: 86.5)
+                                VStack (spacing: 0) {
+                                    ImageItemView(index: 1, images: images, width: 90, height: 86.5)
 
-                                ImageItemView(index: 2, images: images, width: 90, height: 86.5)
+                                    ImageItemView(index: 2, images: images, width: 90, height: 86.5)
+
+                                }
+                            }
+                            .frame(width: 180, height: 173)
+                            .cornerRadius(10)
+                        default:
+                            HStack (spacing: 0) {
+                                VStack (spacing: 0) {
+                                    ImageItemView(index: 0, images: images, width: 90, height: 86.5)
+
+                                    ImageItemView(index: 1, images: images, width: 90, height: 86.5)
+
+                                }
+                                ImageItemView(index: 2, images: images, width: 90, height: 173)
 
                             }
+                            .frame(width: 180, height: 173)
+                            .cornerRadius(10)
                         }
-                        .frame(width: 180, height: 173)
-                        .cornerRadius(10)
-                    default:
-                        HStack (spacing: 0) {
-                            VStack (spacing: 0) {
-                                ImageItemView(index: 0, images: images, width: 90, height: 86.5)
-
-                                ImageItemView(index: 1, images: images, width: 90, height: 86.5)
-
-                            }
-                            ImageItemView(index: 2, images: images, width: 90, height: 173)
-
-                        }
-                        .frame(width: 180, height: 173)
-                        .cornerRadius(10)
+                    }
+                    VStack (alignment: .leading) {
+                        Text(project.unwrappedName)
+                            .fontWeight(.semibold)
+                        Text("^[\(images.count) Item](inflect:true)")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
                     }
                 }
-                VStack (alignment: .leading) {
-                    Text(project.unwrappedName)
-                        .fontWeight(.semibold)
-                    Text("^[\(images.count) Item](inflect:true)")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-            }
                 .scaleEffect(isTapped ? 0.99 : 1.0 )
-                .onTapGesture {
-                    actionButton(project)
+                
+                if db.isEditingProjects {
+                    SelectionView(isSelected: isSelected)
+                        .padding()
                 }
-            
-            if db.isEditingProjects {
-                SelectionView(isSelected: isSelected)
-                    .padding()
             }
         }
+
         .onChange(of: db.isEditingProjects) {
             if !db.isEditingProjects{
                 isSelected = false

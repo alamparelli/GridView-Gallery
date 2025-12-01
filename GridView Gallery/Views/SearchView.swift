@@ -51,22 +51,24 @@ struct SearchView: View {
                             .fontWeight(.semibold)
                         
                         ForEach(recentSearches, id:\.self) { recent in
-                            Text("\(recent)")
-                                .foregroundStyle(.secondary)
-                                .onTapGesture {
-                                    searchText = recent
-                                }
+                            Button {
+                                searchText = recent
+                            } label: {
+                                Text("\(recent)")
+                                    .foregroundStyle(.secondary)
+                            }
                         }
                         
                         Text("Top Tags")
                             .fontWeight(.semibold)
                         
                         ForEach(topTags) { tag in
-                            Text("#\(tag.name)")
-                                .foregroundStyle(.secondary)
-                                .onTapGesture {
-                                    searchText = tag.name
-                                }
+                            Button {
+                                searchText = tag.name
+                            } label: {
+                                Text("#\(tag.name)")
+                                    .foregroundStyle(.secondary)
+                            }
                         }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
