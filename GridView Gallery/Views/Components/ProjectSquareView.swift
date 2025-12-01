@@ -30,13 +30,13 @@ struct ProjectSquareView: View {
     
     @State private var isSelected = false
     
-    var id: Int {
-        if images.count < 3 {
-            return 1
-        } else {
-            return Range(2...3).randomElement()!
-        }
-    }
+//    var id: Int {
+//        if images.count < 3 {
+//            return 1
+//        } else {
+//            return Range(2...3).randomElement()!
+//        }
+//    }
     
     var body: some View {
         Button {
@@ -52,7 +52,7 @@ struct ProjectSquareView: View {
                         .frame(width: 180, height: 173)
                         .cornerRadius(10)
                     } else {
-                        switch id {
+                        switch project.layout {
                         case 1:
                             HStack (spacing: 0) {
                                 ImageItemView(index: 0, images: images, width: 180, height: 173)

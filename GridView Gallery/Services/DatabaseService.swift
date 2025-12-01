@@ -27,7 +27,15 @@ class DatabaseService {
     
     init(context: ModelContext) {
         self.context = context
-        self.refreshAll()
+        refreshAll()
+    }
+    
+    func updateLayout(for project: Project) {
+        if project.unwrappedImages.count < 3 {
+            project.layout = 1
+        } else {
+            project.layout = Range(2...3).randomElement()!
+        }
     }
     
     func updateProjectImage() {
@@ -37,17 +45,17 @@ class DatabaseService {
             }
         }
 
-        self.refreshImages()
-        self.refreshProjects()
-        self.resetSelectedItems = true
+        refreshImages()
+        refreshProjects()
+        resetSelectedItems = true
     }
     
     func resetSelectedImagesWhenEditingList() {
-        self.selectedImagesWhenEditingList.removeAll()
+        selectedImagesWhenEditingList.removeAll()
     }
     
     func resetSelectedProjectsWhenEditingList() {
-        self.selectedProjectsWhenEditingList.removeAll()
+        selectedProjectsWhenEditingList.removeAll()
     }
     
     func projectImages(_ project: Project) -> [ImageItem] {
@@ -79,18 +87,18 @@ class DatabaseService {
     }
     
     private func refreshImages() {
-        self.images = self.queryExtract(ImageItem.self)
-        self.cleanTags()
+        images = queryExtract(ImageItem.self)
+        cleanTags()
     }
     
     private func refreshProjects() {
-        self.projects = self.queryExtract(Project.self)
-        self.cleanTags()
+        projects = queryExtract(Project.self)
+        cleanTags()
     }
     
     private func refreshTags() {
-        self.tags = self.queryExtract(Tag.self)
-        self.cleanTags()
+        tags = queryExtract(Tag.self)
+        cleanTags()
     }
     
     private func queryExtract<T: PersistentModel>(_ type : T.Type) -> [T] {
@@ -111,20 +119,28 @@ class DatabaseService {
     }
     
     func addImageItem(_ imageItem: ImageItem) {
+        if let project = imageItem.project {
+            updateLayout(for: project)
+        }
+        
         context.insert(imageItem)
-        self.save()
-        self.refreshImages()
+        save()
+        refreshImages()
     }
     
     func editImageItem() {
-        self.save()
-        self.refreshImages()
+        save()
+        refreshImages()
     }
     
     func removeImageItem(_ imageItem: ImageItem) {
+        if let project = imageItem.project {
+            updateLayout(for: project)
+        }
+        
         context.delete(imageItem)
-        self.save()
-        self.refreshImages()
+        save()
+        refreshImages()
     }
     
     // helped by Claude to create a generic
@@ -133,21 +149,21 @@ class DatabaseService {
             _ = image.imageData // fix for external storage
             context.delete(image)
         }
-        self.save()
-        self.refreshImages()
-        self.resetSelectedImagesWhenEditingList()
+        save()
+        refreshImages()
+        resetSelectedImagesWhenEditingList()
     }
     
     func addTag(_ tag: Tag) {
         context.insert(tag)
-        self.save()
-        self.refreshTags()
+        save()
+        refreshTags()
     }
     
     func checkTag(_ name: String) -> Tag {
         if tags.filter({$0.name == name}).isEmpty {
             let tag = Tag(name: name)
-            self.addTag(tag)
+            addTag(tag)
             return tag
         } else {
             let tag = tags.filter({$0.name == name}).first!
@@ -158,21 +174,21 @@ class DatabaseService {
     func addProject(_ project: Project) {
         context.insert(project)
         
-        self.projectToUpdate = project // needed for moving functionality
+        projectToUpdate = project // needed for moving functionality
         
-        self.save()
-        self.refreshProjects()
+        save()
+        refreshProjects()
     }
     
     func editProject() {
-        self.save()
-        self.refreshProjects()
+        save()
+        refreshProjects()
     }
     
     func removeProject(_ project: Project) {
         context.delete(project)
-        self.save()
-        self.refreshProjects()
+        save()
+        refreshProjects()
     }
     
     func removeProjects<C: Collection>(_ projects: C, _ removeImages: Bool = false) where C.Element == Project {
@@ -187,8 +203,8 @@ class DatabaseService {
             context.delete(project)
         }
     
-        self.save()
-        self.refreshAll()
-        self.resetSelectedProjectsWhenEditingList()
+        save()
+        refreshAll()
+        resetSelectedProjectsWhenEditingList()
     }
 }
