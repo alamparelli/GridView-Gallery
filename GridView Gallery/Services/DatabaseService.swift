@@ -5,7 +5,6 @@
 import SwiftUI
 import SwiftData
 
-
 @Observable
 class DatabaseService {
     let context: ModelContext
@@ -55,20 +54,7 @@ class DatabaseService {
     func resetSelectedProjectsWhenEditingList() {
         selectedProjectsWhenEditingList.removeAll()
     }
-    
-    func projectImages(_ project: Project) -> [ImageItem] {
-        let pName = project.name
-        let descriptor = FetchDescriptor<ImageItem>(predicate: #Predicate { $0.project?.name == pName})
-        var data: [ImageItem] = []
         
-        do {
-            data = try context.fetch(descriptor)
-        } catch {
-            print("Error fetching notes: \(error)")
-        }
-        return data
-    }
-    
     func refreshAll() {
         refreshImages()
     }
@@ -88,15 +74,7 @@ class DatabaseService {
     
     private func queryExtract<T: PersistentModel>(_ type : T.Type) -> [T] {
         let descriptor = FetchDescriptor<T>(predicate: #Predicate { _ in true})
-        var data: [T] = []
-        
-        do {
-            data = try context.fetch(descriptor)
-        } catch {
-            print("Error fetching notes: \(error)")
-        }
-        
-        return data
+        return (try? context.fetch(descriptor)) ?? [T]()
     }
     
     private func save() {
@@ -105,22 +83,13 @@ class DatabaseService {
     
     func getTags() -> [Tag] {
         let descriptor = FetchDescriptor<Tag>(predicate: #Predicate { _ in true})
-        var data: [Tag] = []
-        
-        do {
-            data = try context.fetch(descriptor)
-        } catch {
-            print("Error fetching notes: \(error)")
-        }
-        
-        return data
+        return (try? context.fetch(descriptor)) ?? [Tag]()
     }
     
     func addImageItem(_ imageItem: ImageItem) {
         context.insert(imageItem)
         save()
         refreshImages()
-        
     }
     
     func editImageItem() {
@@ -151,18 +120,10 @@ class DatabaseService {
     
     private func cleanTags() {
         let descriptor = FetchDescriptor<Tag>(predicate: #Predicate { _ in true})
-        var data: [Tag] = []
+        guard let emptyTags = try? context.fetch(descriptor) else { return }
         
-        do {
-            data = try context.fetch(descriptor)
-        } catch {
-            print("Error fetching notes: \(error)")
-        }
-        
-        for tag in data {
-            if tag.imagesCount == 0 {
-                context.delete(tag)
-            }
+        for tag in emptyTags {
+            context.delete(tag)
         }
         
         save()
@@ -172,19 +133,11 @@ class DatabaseService {
         cleanTags()
         
         let descriptor = FetchDescriptor<Tag>(predicate: #Predicate { $0.name == name})
-        var data: [Tag] = []
-        
-        do {
-            data = try context.fetch(descriptor)
-        } catch {
-            print("Error fetching notes: \(error)")
-        }
-        
-        if data.contains(where: { $0.name == name }) {
-            return data.first!
+
+        if let existingTags = try? context.fetch(descriptor).first {
+            return existingTags
         } else {
-            let tag = Tag(name: name)
-            return tag
+            return Tag(name: name)
         }
     }
     
