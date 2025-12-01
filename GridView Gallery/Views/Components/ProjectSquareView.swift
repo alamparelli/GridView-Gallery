@@ -11,7 +11,7 @@ struct ImageItemView: View {
     var height: CGFloat
     
     var body: some View {
-        if let image = images[index].thumbnailImage {
+        if index < images.count, let image = images[index].thumbnailImage {
             Image(uiImage: image )
                 .resizable()
                 .scaledToFill()
@@ -29,15 +29,7 @@ struct ProjectSquareView: View {
     @State private var isTapped = false
     
     @State private var isSelected = false
-    
-//    var id: Int {
-//        if images.count < 3 {
-//            return 1
-//        } else {
-//            return Range(2...3).randomElement()!
-//        }
-//    }
-    
+        
     var body: some View {
         Button {
             actionButton(project)

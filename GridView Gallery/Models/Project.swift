@@ -10,6 +10,9 @@ class Project: Comparable {
     @Relationship(deleteRule: .nullify, inverse: \ImageItem.project) var images: [ImageItem]?
     
     var layout: Int = 1
+    var imageCount: Int {
+        images?.count ?? 0
+    }
 
     var unwrappedName: String {
         name ?? "Unknown"

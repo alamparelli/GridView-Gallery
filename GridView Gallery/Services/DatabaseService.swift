@@ -31,7 +31,7 @@ class DatabaseService {
     }
     
     func updateLayout(for project: Project) {
-        if project.unwrappedImages.count < 3 {
+        if project.imageCount < 3 {
             project.layout = 1
         } else {
             project.layout = Range(2...3).randomElement()!
@@ -46,7 +46,6 @@ class DatabaseService {
         }
 
         refreshImages()
-        refreshProjects()
         resetSelectedItems = true
     }
     
@@ -72,9 +71,8 @@ class DatabaseService {
     }
     
     func refreshAll() {
+        refreshImages()
         refreshTags()
-        refreshTags()
-        refreshProjects()
     }
     
     private func cleanTags() {
@@ -88,11 +86,17 @@ class DatabaseService {
     
     private func refreshImages() {
         images = queryExtract(ImageItem.self)
+        refreshProjects()
         cleanTags()
     }
     
     private func refreshProjects() {
         projects = queryExtract(Project.self)
+        
+        for project in projects {
+            updateLayout(for: project)
+        }
+        
         cleanTags()
     }
     
@@ -119,10 +123,6 @@ class DatabaseService {
     }
     
     func addImageItem(_ imageItem: ImageItem) {
-        if let project = imageItem.project {
-            updateLayout(for: project)
-        }
-        
         context.insert(imageItem)
         save()
         refreshImages()
@@ -134,10 +134,6 @@ class DatabaseService {
     }
     
     func removeImageItem(_ imageItem: ImageItem) {
-        if let project = imageItem.project {
-            updateLayout(for: project)
-        }
-        
         context.delete(imageItem)
         save()
         refreshImages()
@@ -147,8 +143,10 @@ class DatabaseService {
     func removeImageItems<C: Collection>(_ images: C) where C.Element == ImageItem {
         for image in images {
             _ = image.imageData // fix for external storage
+            
             context.delete(image)
         }
+
         save()
         refreshImages()
         resetSelectedImagesWhenEditingList()
