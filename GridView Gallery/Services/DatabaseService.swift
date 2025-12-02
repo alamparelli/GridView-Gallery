@@ -98,8 +98,6 @@ class DatabaseService {
     }
     
     func removeImageItem(_ imageItem: ImageItem) {
-        print(imageItem.tags)
-        
         context.delete(imageItem)
         save()
         refreshImages()

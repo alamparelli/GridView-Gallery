@@ -8,6 +8,7 @@ import SwiftData
 @main
 struct GridView_GalleryApp: App {
     @State private var navigation = NavigationService()
+    
     @Environment(\.scenePhase) var scenePhase
     
     var database: DatabaseService
@@ -51,12 +52,6 @@ struct GridView_GalleryApp: App {
         WindowGroup {
             TabControllerView(ns: navigation)
                 .preferredColorScheme(themeChoosen)
-//            NavigationStack(path: $navigation.path) {
-//                TabControllerView()
-//            }
-//            .navigationDestination(for: Destination.self) { destination in
-//                navigation.returnView(destination)
-//            }
         }
 
         .environment(navigation)
