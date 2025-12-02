@@ -8,9 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		E54A12B22ED5B11B0001B325 /* Share.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = E54A12A82ED5B11B0001B325 /* Share.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		E58772C02EDED63200D4E60C /* .gitignore in Sources */ = {isa = PBXBuildFile; fileRef = E58772BF2EDED62B00D4E60C /* .gitignore */; };
-		E58772C22EDED94D00D4E60C /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = E58772C12EDED94800D4E60C /* README.md */; };
-		E58772C42EDEDA6F00D4E60C /* LICENSE in Sources */ = {isa = PBXBuildFile; fileRef = E58772C32EDEDA6B00D4E60C /* LICENSE */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,9 +37,6 @@
 /* Begin PBXFileReference section */
 		E53DB44D2EC4BEC90064CAC9 /* GridView Gallery.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "GridView Gallery.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E54A12A82ED5B11B0001B325 /* Share.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Share.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		E58772BF2EDED62B00D4E60C /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = .gitignore; sourceTree = "<group>"; };
-		E58772C12EDED94800D4E60C /* README.md */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = README.md; sourceTree = "<group>"; };
-		E58772C32EDEDA6B00D4E60C /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LICENSE; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -66,12 +60,35 @@
 			);
 			target = E54A12A72ED5B11B0001B325 /* Share */;
 		};
+		E58772C52EDEDB0900D4E60C /* Exceptions for "GridView Gallery" folder in "GridView Gallery" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				.gitignore,
+				LICENSE,
+				README.md,
+			);
+			target = E53DB44C2EC4BEC90064CAC9 /* GridView Gallery */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+		E58772C62EDEDB0900D4E60C /* Exceptions for "GridView Gallery" folder in "Compile Sources" phase from "GridView Gallery" target */ = {
+			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
+			buildPhase = E53DB4492EC4BEC90064CAC9 /* Sources */;
+			membershipExceptions = (
+				.gitignore,
+				LICENSE,
+				README.md,
+			);
+		};
+/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		E53DB44F2EC4BEC90064CAC9 /* GridView Gallery */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
+				E58772C52EDEDB0900D4E60C /* Exceptions for "GridView Gallery" folder in "GridView Gallery" target */,
+				E58772C62EDEDB0900D4E60C /* Exceptions for "GridView Gallery" folder in "Compile Sources" phase from "GridView Gallery" target */,
 				E54A12BB2ED5BC1C0001B325 /* Exceptions for "GridView Gallery" folder in "Share" target */,
 			);
 			path = "GridView Gallery";
@@ -108,12 +125,9 @@
 		E53DB4442EC4BEC90064CAC9 = {
 			isa = PBXGroup;
 			children = (
-				E58772BF2EDED62B00D4E60C /* .gitignore */,
 				E53DB44F2EC4BEC90064CAC9 /* GridView Gallery */,
 				E54A12A92ED5B11B0001B325 /* Share */,
 				E53DB44E2EC4BEC90064CAC9 /* Products */,
-				E58772C12EDED94800D4E60C /* README.md */,
-				E58772C32EDEDA6B00D4E60C /* LICENSE */,
 			);
 			sourceTree = "<group>";
 		};
@@ -235,9 +249,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E58772C02EDED63200D4E60C /* .gitignore in Sources */,
-				E58772C22EDED94D00D4E60C /* README.md in Sources */,
-				E58772C42EDEDA6F00D4E60C /* LICENSE in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

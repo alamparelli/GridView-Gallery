@@ -95,6 +95,7 @@ struct AddImageView: View {
                                         .frame(width: 150, height: 100)
                                 }
                             }
+                            .overlayModifierRounded()
 
                         }
                         .padding()

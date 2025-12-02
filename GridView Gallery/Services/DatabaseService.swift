@@ -169,7 +169,7 @@ class DatabaseService {
     /// - Parameter name: The tag name.
     /// - Returns: Existing or new tag instance.
     func checkTag(_ name: String) -> Tag {
-        cleanTags()
+//        cleanTags()
 
         let descriptor = FetchDescriptor<Tag>(predicate: #Predicate { $0.name == name})
 
