@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		E54A12B22ED5B11B0001B325 /* Share.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = E54A12A82ED5B11B0001B325 /* Share.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		E58772C02EDED63200D4E60C /* .gitignore in Sources */ = {isa = PBXBuildFile; fileRef = E58772BF2EDED62B00D4E60C /* .gitignore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,6 +38,7 @@
 /* Begin PBXFileReference section */
 		E53DB44D2EC4BEC90064CAC9 /* GridView Gallery.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "GridView Gallery.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E54A12A82ED5B11B0001B325 /* Share.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Share.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		E58772BF2EDED62B00D4E60C /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = .gitignore; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -102,6 +104,7 @@
 		E53DB4442EC4BEC90064CAC9 = {
 			isa = PBXGroup;
 			children = (
+				E58772BF2EDED62B00D4E60C /* .gitignore */,
 				E53DB44F2EC4BEC90064CAC9 /* GridView Gallery */,
 				E54A12A92ED5B11B0001B325 /* Share */,
 				E53DB44E2EC4BEC90064CAC9 /* Products */,
@@ -226,6 +229,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E58772C02EDED63200D4E60C /* .gitignore in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
