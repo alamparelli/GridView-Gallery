@@ -4,13 +4,17 @@
 
 import SwiftUI
 
+/// Search view for finding images and projects by tags, description, or name.
 struct SearchView: View {
+    /// Recently searched terms stored persistently.
     @AppStorage("eu.lamparelli.grid-gallery.recentSearches")
         var recentSearches: [String] = []
     @Environment(DatabaseService.self) var db
 
+    /// Current search query.
     @State private var searchText: String = ""
-    
+
+    /// Top 5 tags by usage count.
     var topTags: [Tag] {
         return db.getTags()
             .filter({$0.imagesCount > 0})
@@ -18,7 +22,8 @@ struct SearchView: View {
             .prefix(5)
             .map { $0 }
     }
-    
+
+    /// Images filtered by search text matching tags or description.
     var images: [ImageItem] {
         if searchText.isEmpty {
             return db.images
@@ -28,7 +33,8 @@ struct SearchView: View {
             }
         }
     }
-    
+
+    /// Projects filtered by search text matching name.
     var projects: [Project] {
         if searchText.isEmpty {
             return db.projects

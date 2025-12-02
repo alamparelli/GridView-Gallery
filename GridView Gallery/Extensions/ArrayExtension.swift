@@ -4,7 +4,10 @@
 
 import Foundation
 
+/// Makes codable arrays compatible with AppStorage by conforming to RawRepresentable.
 extension Array: @retroactive RawRepresentable where Element: Codable {
+    /// Decodes an array from a JSON string.
+    /// - Parameter rawValue: JSON string representation.
     public init?(rawValue: String) {
         guard
             let data = rawValue.data(using: .utf8),
@@ -13,6 +16,7 @@ extension Array: @retroactive RawRepresentable where Element: Codable {
         self = result
     }
 
+    /// Encodes the array to a JSON string.
     public var rawValue: String {
         guard
             let data = try? JSONEncoder().encode(self),

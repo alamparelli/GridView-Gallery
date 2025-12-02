@@ -4,7 +4,9 @@
 
 import SwiftUI
 
+/// Visual indicator showing selection state in edit mode.
 struct SelectionView: View {
+    /// Whether the item is currently selected.
     let isSelected: Bool
     
     var body: some View {

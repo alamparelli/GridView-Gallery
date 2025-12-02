@@ -6,22 +6,37 @@ import SwiftUI
 import SwiftData
 import PhotosUI
 
+/// View for adding new images via photo picker or camera.
 struct AddImageView: View {
     @Environment(DatabaseService.self) var db
-    
+
+    /// Optional project to assign images to.
     @State var project: Project?
+
+    /// Temporary image item for tag editing.
     @State private var image: ImageItem?
-    
+
+    /// Shared description for all added images.
     @State private var description = ""
+
+    /// Image data from photo picker.
     @State private var selectedImageData: [Data] = []
+
+    /// PhotosUI picker items.
     @State private var pickerItems: [PhotosPickerItem] = []
+
+    /// Whether images are being loaded.
     @State private var isLoading = false
+
+    /// Shows camera interface.
     @State private var showCamera = false
-    
+
+    /// Image captured from camera.
     @State private var imageData: UIImage?
-    
+
     @Environment(\.dismiss) var dismiss
-    
+
+    /// Whether the save button should be disabled.
     var disableSave: Bool {
         return isLoading && selectedImageData.isEmpty && imageData == nil
     }
@@ -150,7 +165,8 @@ struct AddImageView: View {
                 .ignoresSafeArea()
         }
     }
-    
+
+    /// Adds selected images to the database with metadata.
     func addImage() {
         // camera image
         if let imageData = imageData?.jpegData(compressionQuality: 1.0) {

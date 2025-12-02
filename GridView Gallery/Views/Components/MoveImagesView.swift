@@ -4,11 +4,15 @@
 
 import SwiftUI
 
+/// Sheet for moving selected images to a different project.
 struct MoveImagesView: View {
     @Environment(DatabaseService.self) var db
     @Environment(\.dismiss) var dismiss
-    
+
+    /// Selected destination project.
     @State private var project: Project?
+
+    /// Shows add project sheet for creating new destination.
     @State private var showAddProject = false
     
     var body: some View {

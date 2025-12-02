@@ -3,9 +3,12 @@
 //
 import SwiftUI
 
+/// Read-only view displaying image metadata.
 struct DetailReadOnlyView: View {
+    /// Image to display details for.
     @Binding var image: ImageItem?
-    
+
+    /// Local copy of description for display.
     @State private var description: String = ""
     
     var body: some View {

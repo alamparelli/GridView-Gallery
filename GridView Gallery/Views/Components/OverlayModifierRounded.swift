@@ -4,6 +4,7 @@
 
 import SwiftUI
 
+/// View modifier that adds a rounded border overlay.
 struct OverlayModifierRounded: ViewModifier {
     func body(content: Content) -> some View {
         content
@@ -14,8 +15,9 @@ struct OverlayModifierRounded: ViewModifier {
     }
 }
 
-
 extension View {
+    /// Applies a rounded border overlay to the view.
+    /// - Returns: View with rounded border.
     func overlayModifierRounded() -> some View {
         self.modifier(OverlayModifierRounded())
     }

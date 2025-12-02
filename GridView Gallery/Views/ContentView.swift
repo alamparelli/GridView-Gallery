@@ -4,17 +4,21 @@
 
 import SwiftUI
 
+/// Main gallery view displaying all images in a staggered grid.
 struct ContentView: View {
     @Environment(NavigationService.self) var ns
     @Environment(DatabaseService.self) var db
     @Environment(\.dismiss) var dismiss
-    
+
     @State private var showPicker = false
     @State private var showAddImage = false
-    
+
     @State private var showDebug = false
-    
+
+    /// Shows the move images sheet.
     @State private var showMoveView = false
+
+    /// Shows delete confirmation dialog.
     @State private var showDeleteConfirmation: Bool = false
         
     var body: some View {

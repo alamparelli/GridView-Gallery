@@ -4,23 +4,34 @@
 
 import SwiftUI
 
+/// Detail view for a single project showing its images.
 struct ProjectView: View {
     @Environment(DatabaseService.self) var db
     @Environment(\.dismiss) var dismiss
 
+    /// The project to display.
     var project: Project
+
+    /// Editable project name bound to navigation title.
     @State private var projectName: String = ""
+
     @State private var showAddImage = false
+
+    /// Search text for filtering images.
     @State private var searchText: String = ""
-    
+
     @State private var isEditingImages = false
     @State private var showMoveView = false
+
+    /// Shows delete confirmation dialog.
     @State private var showDeleteConfirmation: Bool = false
-    
+
+    /// Whether the project has no images.
     var projectIsEmpty: Bool {
         project.images?.count == 0
     }
-    
+
+    /// Images filtered by search text matching tags or description.
     var filteredphotos: [ImageItem] {
         if searchText.isEmpty {
             return project.unwrappedImages

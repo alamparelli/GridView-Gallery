@@ -4,10 +4,18 @@
 
 import SwiftUI
 
+/// Helper view displaying a single image from a project's image array.
 struct ImageItemView: View {
+    /// Index in the images array.
     var index: Int = 0
+
+    /// Project's images.
     var images: [ImageItem]
+
+    /// Width of the image view.
     var width: CGFloat
+
+    /// Height of the image view.
     var height: CGFloat
     
     var body: some View {
@@ -21,13 +29,20 @@ struct ImageItemView: View {
     }
 }
 
+/// Project preview tile with variable layout based on image count.
 struct ProjectSquareView: View {
+    /// The project to display.
     var project: Project
+
+    /// Project's images.
     var images: [ImageItem]
     @Environment(DatabaseService.self) var db
     @Environment(NavigationService.self) var ns
+
+    /// Tap animation state.
     @State private var isTapped = false
-    
+
+    /// Whether selected in edit mode.
     @State private var isSelected = false
         
     var body: some View {
@@ -107,7 +122,9 @@ struct ProjectSquareView: View {
             }
         }
     }
-    
+
+    /// Handles tap: toggles selection in edit mode, navigates to project otherwise.
+    /// - Parameter project: The tapped project.
     func actionButton(_ project: Project) {
         withAnimation(.smooth(duration: 0.1)) {
             isTapped = true

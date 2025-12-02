@@ -4,14 +4,20 @@
 
 import SwiftUI
 
+/// Form section for editing image metadata (project, tags, description).
 struct AddDetailsImageView: View {
     @Environment(DatabaseService.self) var db
-    
+
+    /// Image being edited.
     @Binding var imageItem: ImageItem?
-    
+
+    /// Selected project.
     @Binding var project: Project?
+
+    /// Image description text.
     @Binding var description: String
-    
+
+    /// Whether details editing is enabled.
     @State private var showEditDetails = true
     
     var body: some View {

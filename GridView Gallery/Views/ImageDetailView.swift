@@ -5,33 +5,47 @@
 import SwiftUI
 import SwiftData
 
+/// Full-screen image viewer with zoom, pan, and swipe gestures.
 struct ImageDetailView: View {
     @Environment(NavigationService.self) var ns
     @Environment(DatabaseService.self) var db
     @Environment(\.dismiss) var dismiss
-    
+
+    /// Currently displayed image.
     var image: ImageItem?
+
+    /// All images for horizontal scrolling.
     var images: [ImageItem]
 
     @State private var selectedImageID: PersistentIdentifier?
     @State private var selectedImage: ImageItem?
+
+    /// Shows edit metadata sheet.
     @State private var showEditDetails = false
-    
+
     @State private var project: Project?
     @State private var description = ""
-    
-    // Gestures
+
+    /// Whether UI chrome is hidden.
     @State private var fullScreen = true
+
+    /// Zoom gesture tracking.
     @State private var lastScale = 1.0
     @State private var scale = 1.0
+
+    /// Pan gesture tracking.
     @State var offset: CGSize = .zero
     @State var lastOffset: CGSize = .zero
-    
+
+    /// Minimum zoom level.
     private let minScale = 1.0
+
+    /// Maximum zoom level.
     private let maxScale = 3.0
-    
+
     @Namespace private var animation
-    
+
+    /// Combined gesture handling pinch, pan, double-tap, and single-tap.
     var magnification: some Gesture {
         MagnificationGesture()
             .onChanged { state in
@@ -80,22 +94,30 @@ struct ImageDetailView: View {
                     } : nil
             )
     }
-    
+
+    /// Combines current drag with previous offset.
+    /// - Parameter offset: Current drag translation.
+    /// - Returns: Combined offset.
     private func handleOffsetChange(_ offset: CGSize) -> CGSize {
         var newOffset: CGSize = .zero
         newOffset.width = offset.width + lastOffset.width
         newOffset.height = offset.height + lastOffset.height
         return newOffset
     }
-    
+
+    /// Ensures scale doesn't go below minimum.
+    /// - Returns: Clamped scale value.
     func getMinimumZoomScale() -> CGFloat {
         return max(scale, minScale)
     }
-    
+
+    /// Ensures scale doesn't exceed maximum.
+    /// - Returns: Clamped scale value.
     func getMaximumZoomScale() -> CGFloat {
         return min(scale, maxScale)
     }
-    
+
+    /// Clamps scale between min and max limits.
     func validateScaleLimit() {
         scale = getMinimumZoomScale()
         scale = getMaximumZoomScale()

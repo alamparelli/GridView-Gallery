@@ -4,12 +4,21 @@
 
 import SwiftUI
 
+/// Displays thumbnail immediately, then loads full resolution asynchronously.
 struct LazyPhotoView: View {
+    /// The image to display.
     let image: ImageItem
+
+    /// Whether this is the currently visible image.
     let isCurrentPhoto: Bool
+
+    /// Whether in fullscreen mode.
     let fullScreen: Bool
-    
+
+    /// Loaded full-resolution image.
     @State private var fullImage: UIImage?
+
+    /// Whether full image is currently loading.
     @State private var isLoadingFull = false
     
     var body: some View {
@@ -40,7 +49,8 @@ struct LazyPhotoView: View {
             }
         }
     }
-    
+
+    /// Loads the full-resolution image asynchronously.
     private func loadFullResolution() {
         isLoadingFull = true
         

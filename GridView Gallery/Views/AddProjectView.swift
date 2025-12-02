@@ -4,10 +4,16 @@
 
 import SwiftUI
 
+/// Simple sheet for creating a new project.
 struct AddProjectView: View {
     @Environment(DatabaseService.self) var db
+
+    /// Project name text field.
     @State private var project = ""
+
     @Environment(\.dismiss) var dismiss
+
+    /// Automatically focuses the text field on appear.
     @FocusState private var isFocused: Bool
         
     var body: some View {

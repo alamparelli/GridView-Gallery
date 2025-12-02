@@ -4,10 +4,17 @@
 
 import SwiftUI
 
+/// Root view managing tab-based navigation.
 struct TabControllerView: View {
+    /// Currently selected tab.
     @State private var selectedTab = Destination.gallery
+
+    /// Navigation service for managing navigation stacks.
     @Bindable var ns : NavigationService
-    
+
+    /// Creates a navigation stack for a tab destination.
+    /// - Parameter destination: The tab's root destination.
+    /// - Returns: NavigationStack configured for the tab.
     @ViewBuilder
     func NavigationView(_ destination: Destination) -> some View {
         NavigationStack(path: $ns.path) {
@@ -17,7 +24,10 @@ struct TabControllerView: View {
                 }
         }
     }
-    
+
+    /// Returns the root view for a tab destination.
+    /// - Parameter destination: The destination to display.
+    /// - Returns: The root view for the tab.
     @ViewBuilder
     private func selectView(for destination: Destination) -> some View {
         switch destination {

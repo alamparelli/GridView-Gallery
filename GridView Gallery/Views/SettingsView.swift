@@ -4,10 +4,12 @@
 
 import SwiftUI
 
+/// Settings view for configuring app preferences.
 struct SettingsView: View {
-    /// User's preferred theme setting stored persistently
+    /// User's preferred theme setting stored persistently.
     @AppStorage("GridViewTheme") var theme = "Dynamic"
-    /// Available theme options for user selection
+
+    /// Available theme options for user selection.
     let themeNames: [String] = ["Dynamic", "Light", "Dark"]
     
     var body: some View {

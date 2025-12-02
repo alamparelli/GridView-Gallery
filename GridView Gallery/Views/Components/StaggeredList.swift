@@ -4,14 +4,20 @@
 
 import SwiftUI
 
+/// Two-column staggered grid layout for images.
 struct StaggeredList: View {
+    /// Number of columns (fixed at 2).
     let columns: Int = 2
+
+    /// Images to display.
     var images: [ImageItem] = []
-    
+
+    /// Images sorted by creation date, newest first.
     private var sortedImages: [ImageItem] {
         images.sorted(by: { $0.createdAt > $1.createdAt })
     }
-    
+
+    /// Images split alternately into two columns.
     var splitArray: [[ImageItem]] {
         var result: [[ImageItem]] = []
         

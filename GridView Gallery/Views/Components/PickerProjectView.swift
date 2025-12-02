@@ -4,10 +4,14 @@
 
 import SwiftUI
 
+/// Navigation picker for selecting a project.
 struct PickerProjectView: View {
+    /// Selected project binding.
     @Binding var project: Project?
+
+    /// Placeholder text for no selection.
     var text: String
-    
+
     @Environment(DatabaseService.self) var db
     
     var body: some View {

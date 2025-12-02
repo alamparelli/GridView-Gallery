@@ -4,21 +4,26 @@
 
 import SwiftUI
 
+/// View displaying all projects in a grid layout.
 struct ProjectsView: View {
     @State private var showAddProject: Bool = false
     @Environment(DatabaseService.self) var db
     @Environment(NavigationService.self) var ns
     @Environment(\.dismiss) var dismiss
-    
+
+    /// Two-column grid layout.
     let columns: [GridItem] = [
         GridItem(.flexible()),
         GridItem(.flexible()),
     ]
-    
+
     @State private var isEditingProjects = false
     @State private var showMoveView = false
+
+    /// Shows delete confirmation dialog.
     @State private var showDeleteConfirmation: Bool = false
-    
+
+    /// Whether the projects list is empty.
     var isProjectsEmpty: Bool {
         db.projects.isEmpty
     }

@@ -4,19 +4,29 @@
 
 import SwiftUI
 
+/// Tag management view with editing, autocomplete, and removal.
 struct TagsView: View {
+    /// Image to edit tags for.
     @Binding var image: ImageItem?
-    
+
+    /// Whether in edit mode.
     @State private var isEditing = false
+
+    /// Whether to show tag removal buttons.
     var showEditDetails = false
-    
+
     @Environment(DatabaseService.self) var db
-    
+
+    /// Focus state for text editor.
     @FocusState private var isFocused: Bool
+
+    /// Space-separated tag string.
     @State private var tagString: String = ""
-    
+
+    /// Current word being typed for autocomplete.
     @State private var currentWord: String = ""
-    
+
+    /// Tag suggestions based on current word.
     private var tagSuggestions: [Tag] {
         guard !currentWord.isEmpty else { return [] }
         guard let image = image else { return [] }
@@ -31,7 +41,8 @@ struct TagsView: View {
             .prefix(5)
             .map { $0 }
     }
-    
+
+    /// Tags split by spaces.
     private var filteredTags: [String] {
         return tagString.split(separator: " ").map(String.init)
     }
@@ -136,8 +147,10 @@ struct TagsView: View {
         .animation(.default, value: tagSuggestions)
         .animation(.none, value: tagString)
     }
-  
-        func removeTagFromSelection(_ tag: String) {
+
+    /// Removes a tag from the tag string and updates the image.
+    /// - Parameter tag: Tag name to remove.
+    func removeTagFromSelection(_ tag: String) {
         let name = tag
         
         let tempArray: [String] = tagString.lowercased()
@@ -150,7 +163,9 @@ struct TagsView: View {
         
         convertTags()
     }
-    
+
+    /// Appends a tag suggestion to the tag string.
+    /// - Parameter tagName: Tag name to append.
     func appendTag(_ tagName: String) {
         var words = tagString.split(separator: " ").map(String.init)
         if !words.isEmpty {
@@ -160,13 +175,15 @@ struct TagsView: View {
         tagString = words.joined(separator: " ") + " "
         convertTags()
     }
-    
+
+    /// Loads existing tags into the tag string.
     func showTags() {
         if let tags = image?.tags {
             tagString = tags.map({ $0.name }).joined(separator: " ")
         }
     }
 
+    /// Parses tag string and updates the image's tags, creating new tags as needed.
     func convertTags() {
         // Parse new tags
         let tagNames = Set(

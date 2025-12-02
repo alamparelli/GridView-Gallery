@@ -3,13 +3,20 @@
 //
 import SwiftUI
 
+/// Individual image tile with selection support and tap-to-view.
 struct ImageView: View {
+    /// The image to display.
     let image: ImageItem
     @Environment(NavigationService.self) var ns
     @Environment(DatabaseService.self) var db
-    
-    @State private var isSelected = false    
+
+    /// Whether this image is selected in edit mode.
+    @State private var isSelected = false
+
+    /// Shows ImageDetailView sheet.
     @State private var openDetails = false
+
+    /// Tap animation state.
     @State private var isTapped = false
         
     var body: some View {
@@ -46,7 +53,9 @@ struct ImageView: View {
             }
         }
     }
-    
+
+    /// Handles tap: toggles selection in edit mode, opens detail view otherwise.
+    /// - Parameter image: The tapped image.
     func actionButton(_ image: ImageItem) {
         withAnimation(.smooth(duration: 0.1)) {
             isTapped = true
