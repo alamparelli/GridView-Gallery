@@ -1,11 +1,14 @@
 //
 // Source : https://github.com/globulus/swiftui-flow-layout/blob/main/Sources/SwiftUIFlowLayout/SwiftUIFlowLayout.swift
+// Generic flow layout component that wraps items and calculates dynamic height.
 //
 
 import SwiftUI
 
+/// Default spacing between items in flow layout.
 public let flowLayoutDefaultItemSpacing: CGFloat = 4
 
+/// Generic flow layout that wraps items horizontally and calculates dynamic height.
 public struct FlowLayout<RefreshBinding, Data: Collection, ItemView: View>: View {
   let mode: Mode
   @Binding var binding: RefreshBinding
@@ -123,11 +126,11 @@ struct FlowLayout_Previews: PreviewProvider {
                       "And then a very very very long long long long long long long long longlong long long long long long longlong long long long long long longlong long long long long long longlong long long long long long longlong long long long long long long long one", "and", "then", "some", "short short short ones"]) {
       Text($0)
         .font(.system(size: 12))
-        .foregroundColor(.black)
+        .foregroundStyle(.black)
         .padding()
         .background(RoundedRectangle(cornerRadius: 4)
                                .border(Color.gray)
-                               .foregroundColor(Color.gray))
+                               .foregroundStyle(Color.gray))
     }.padding()
   }
 }
@@ -154,11 +157,11 @@ struct TestWithDeletion: View {
                    items: items) {
           Text($0)
             .font(.system(size: 12))
-            .foregroundColor(.black)
+            .foregroundStyle(.black)
             .padding()
             .background(RoundedRectangle(cornerRadius: 4)
                                    .border(Color.gray)
-                                   .foregroundColor(Color.gray))
+                                   .foregroundStyle(Color.gray))
         }.padding()
         }
     }
@@ -176,11 +179,11 @@ struct TestWithRange_Previews: PreviewProvider {
                    items: 1..<100) {
             Text("\($0)")
                 .font(.system(size: 12))
-                .foregroundColor(.black)
+                .foregroundStyle(.black)
                 .padding()
                 .background(RoundedRectangle(cornerRadius: 4)
                     .border(Color.gray)
-                    .foregroundColor(Color.gray))
+                    .foregroundStyle(Color.gray))
         }.padding()
     }
 }
