@@ -125,6 +125,3 @@ struct ProjectView: View {
     }
 }
 
-//#Preview {
-//    ProjectView(project: Project())
-//}

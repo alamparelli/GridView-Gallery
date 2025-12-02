@@ -18,8 +18,6 @@ struct LazyPhotoView: View {
             if let thumbnail = image.thumbnailImage {
                 Image(uiImage: thumbnail)
                     .resizable()
-//                    .aspectRatio(contentMode: fullScreen ? .fit : .fill)
-//                    .scaledToFit()
             } else {
                 placeholderView
             }
@@ -28,8 +26,6 @@ struct LazyPhotoView: View {
             if let fullImg = fullImage {
                 Image(uiImage: fullImg)
                     .resizable()
-//                    .aspectRatio(contentMode: fullScreen ? .fit : .fill)
-//                    .scaledToFit()
                     .transition(.opacity.animation(.easeInOut(duration: 0.2)))
             }
         }
@@ -71,7 +67,4 @@ struct LazyPhotoView: View {
             .overlayModifierRounded()
     }
 }
-//
-//#Preview {
-//    LazyPhotoView()
-//}
+

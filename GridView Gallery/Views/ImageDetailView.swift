@@ -21,7 +21,7 @@ struct ImageDetailView: View {
     @State private var description = ""
     
     // Gestures
-    @State private var fullScreen: Bool = false
+    @State private var fullScreen = true
     @State private var lastScale = 1.0
     @State private var scale = 1.0
     @State var offset: CGSize = .zero
@@ -196,7 +196,7 @@ struct ImageDetailView: View {
                    let newImage = images.first(where: { $0.persistentModelID == newID }) {
                     selectedImage = newImage
 
-                    // Si on est en mode édition, mettre à jour aussi les champs
+                    // if edit , update fields
                     if showEditDetails {
                         description = newImage.fulldescription ?? ""
                         project = newImage.project
@@ -216,9 +216,6 @@ struct ImageDetailView: View {
                 if let image = image {
                     selectedImageID = image.persistentModelID
                     selectedImage = image
-                    
-                    // set tags for binding
-//                    tags = image.tags
                 }
             }
             .onDisappear {
@@ -228,7 +225,6 @@ struct ImageDetailView: View {
     }
     
     func editAction() {
-//        withAnimation {
             if showEditDetails {
                 showEditDetails = false
                 
@@ -241,13 +237,9 @@ struct ImageDetailView: View {
                 // Load state from model
                 description = selectedImage?.fulldescription ?? ""
                 project = selectedImage?.project
-//                tags = selectedImage?.tags ?? []
                 
                 showEditDetails = true
             }
-//        }
+
     }
 }
-//#Preview {
-//    DebugView()
-//}

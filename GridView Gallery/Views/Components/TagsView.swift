@@ -5,7 +5,6 @@
 import SwiftUI
 
 struct TagsView: View {
-    // Support BOTH patterns
     @Binding var image: ImageItem?
     
     @State private var isEditing = false
@@ -16,7 +15,6 @@ struct TagsView: View {
     @FocusState private var isFocused: Bool
     @State private var tagString: String = ""
     
-    // tag proposal
     @State private var currentWord: String = ""
     
     private var tagSuggestions: [Tag] {
@@ -30,18 +28,12 @@ struct TagsView: View {
                 tag.name.lowercased().localizedStandardContains(currentWord)
                 && !existingNames.contains(tag.name.lowercased())
             }
-            .prefix(5)  // Limite à 5 suggestions
+            .prefix(5)
             .map { $0 }
     }
     
     private var filteredTags: [String] {
-//        guard let image = image else { return [] }
-        
         return tagString.split(separator: " ").map(String.init)
-        
-//        return image.tags.filter { tag in
-//            tmpArray.contains(tag.name)
-//        }
     }
     
     var body: some View {
@@ -146,7 +138,6 @@ struct TagsView: View {
     }
   
         func removeTagFromSelection(_ tag: String) {
-//    func removeTagFromSelection(_ tag: Tag) {
         let name = tag
         
         let tempArray: [String] = tagString.lowercased()

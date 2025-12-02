@@ -34,15 +34,7 @@ struct ContentView: View {
                 StaggeredList(images: db.images)
             }
         }
-        .toolbar {
-            #if DEBUG
-            ToolbarItem {
-                Button("Debug", systemImage: "flame") {
-                    showDebug = true
-                }
-            }
-            #endif
-            
+        .toolbar {            
             if !db.images.isEmpty {
                 ToolbarItem {
                     Button(db.isEditingImages ? "Done" : "Edit" , systemImage: db.isEditingImages ? "checkmark" : "pencil") {
@@ -105,12 +97,6 @@ struct ContentView: View {
             MoveImagesView()
                 .presentationDetents([.medium])
         }
-        .sheet(isPresented: $showDebug) {
-            DebugView()
-        }
     }
 }
 
-//#Preview {
-//    ContentView()
-//}

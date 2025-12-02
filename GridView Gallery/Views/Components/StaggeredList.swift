@@ -55,7 +55,3 @@ struct StaggeredList: View {
         .scrollIndicators(.never)
     }
 }
-
-//#Preview {
-//    StaggeredList()
-//}

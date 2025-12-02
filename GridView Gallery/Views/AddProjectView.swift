@@ -56,6 +56,3 @@ struct AddProjectView: View {
     }
 }
 
-//#Preview {
-//    AddProjectView()
-//}

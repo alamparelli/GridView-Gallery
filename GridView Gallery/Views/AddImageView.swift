@@ -22,9 +22,6 @@ struct AddImageView: View {
     
     @Environment(\.dismiss) var dismiss
     
-    let colorsList: [Color] = [Color.red, Color.blue, Color.green, Color.yellow]
-    @State private var offset = 10.0
-    
     var disableSave: Bool {
         return isLoading && selectedImageData.isEmpty && imageData == nil
     }
@@ -45,17 +42,13 @@ struct AddImageView: View {
                                 } else {
                                     ZStack {
                                         ForEach(Array(selectedImageData.enumerated()), id: \.offset) { index, imageData in
-                                            if let uiImage = UIImage(data: imageData)
-//                                               let thumbnailData = uiImage.jpegData(compressionQuality: 0.6),
-                                               /*let thumbnail = UIImage(data: uiImage)*/ {
+                                            if let uiImage = UIImage(data: imageData){
                                                 Image(uiImage: uiImage)
                                                     .resizable()
                                                     .scaledToFill()
                                                     .frame(width: 150, height: 100)
                                                     .clipped()
                                                     .clipShape(.rect(cornerRadius: 10))
-//                                                    .offset(x: offset * Double(index) - 5)
-    //                                                .rotationEffect(Angle(degrees: offset * Double(index) / 3 - 10))
                                             }
                                         }
                                         
@@ -161,9 +154,7 @@ struct AddImageView: View {
     func addImage() {
         // camera image
         if let imageData = imageData?.jpegData(compressionQuality: 1.0) {
-//            image = ImageItem(imageData: imageData)
             image?.imageData = imageData
-//            let img = ImageItem(imageData: imageData)
             
             if !description.isEmpty {
                 image?.fulldescription = description
