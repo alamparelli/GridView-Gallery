@@ -45,9 +45,9 @@ GridView Gallery is an iOS application built with SwiftUI that helps creative pr
 
 ## 📱 Screenshots
 
-| HomeView | ListView (Grid) | ImageDetailView | AddImageSheet | FilterSheet |
+| Projects | Home | Images Details | Add Image | Search |
 |:---:|:---:|:---:|:---:|:---:|
-| *Lists overview with thumbnails* | *Pinterest-style grid layout* | *Full-screen image with metadata* | *Add images with optional tags* | *Search and filter by tags* |
+| <img width="200" alt="Lists overview with thumbnails" src="https://github.com/user-attachments/assets/6ef54515-d316-4efe-9ddf-471690f974c9" /> | <img width="200" alt="Pinterest-style grid layout" src="https://github.com/user-attachments/assets/b45bf03f-4013-4d3b-b4f5-be9e700f7cae" /> | <img width="200" alt="Full-screen image with metadata" src="https://github.com/user-attachments/assets/8881463d-b09e-48e6-acab-64ea492f9589" /> | <img width="200" alt="Add images with optional tags" src="https://github.com/user-attachments/assets/9df8133a-28a6-4d63-81c4-151ef92344af" /> | <img width="200" alt="Search and filter by tags" src="https://github.com/user-attachments/assets/2d2c1982-19b4-43d0-9a1e-32f461847ce8" /> |
 
 ## 🎨 Design
 
