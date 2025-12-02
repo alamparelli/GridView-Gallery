@@ -23,10 +23,7 @@ struct AddProjectView: View {
                         dismiss()
                     }
                     .padding()
-                    .overlay {
-                        RoundedRectangle(cornerRadius: 10)
-                            .stroke(.accent, lineWidth: 1)
-                    }
+                    .overlayModifierRounded()
             }
             .glassEffect()
             .padding()

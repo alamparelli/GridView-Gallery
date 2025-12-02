@@ -40,10 +40,7 @@ struct AddImageView: View {
                                     Label("Add a photo", systemImage: "photo.on.rectangle")
                                         .labelStyle(.iconOnly)
                                         .frame(width: 150, height: 100)
-                                        .overlay {
-                                            RoundedRectangle(cornerRadius: 10)
-                                                .stroke(.strokeBorder, lineWidth: 1)
-                                        }
+                                        .overlayModifierRounded()
                                         .contentShape(Rectangle())
                                 } else {
                                     ZStack {
@@ -66,10 +63,7 @@ struct AddImageView: View {
                                             .foregroundStyle(.accentColorInverted)
                                             .font(.largeTitle.bold())
                                     }
-                                    .overlay {
-                                        RoundedRectangle(cornerRadius: 10)
-                                            .stroke(.strokeBorder, lineWidth: 1)
-                                    }
+                                    .overlayModifierRounded()
                                     .contentShape(Rectangle())
                                 }
                             }
@@ -91,20 +85,13 @@ struct AddImageView: View {
                                     Label("Take a picture", systemImage: "camera")
                                         .labelStyle(.iconOnly)
                                         .frame(width: 150, height: 100)
-                                        .overlay {
-                                            RoundedRectangle(cornerRadius: 10)
-                                                .stroke(.strokeBorder, lineWidth: 1)
-                                        }
                                 }
                             }
 
                         }
                         .padding()
                         .frame(maxWidth: .infinity, minHeight: 100)
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(.strokeBorder, lineWidth: 1)
-                        }
+                        .overlayModifierRounded()
                     }
                     .padding([.top, .bottom])
                     

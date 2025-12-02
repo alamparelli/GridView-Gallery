@@ -104,10 +104,7 @@ struct TagsView: View {
             }
             .padding(.horizontal, 4)
             .frame(maxWidth: .infinity, minHeight: 100)
-            .overlay {
-                RoundedRectangle(cornerRadius: 10)
-                    .stroke(.strokeBorder, lineWidth: 1)
-            }
+            .overlayModifierRounded()
             
             if isEditing && !tagSuggestions.isEmpty {
                 ScrollView(.horizontal, showsIndicators: false) {

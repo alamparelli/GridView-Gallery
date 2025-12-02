@@ -14,24 +14,7 @@ struct MoveImagesView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                Picker(selection: $project) {
-                    Text("Create new")
-                        .tag(nil as Project?)
-                    ForEach(db.projects.sorted()) { project in
-                        Text(project.unwrappedName)
-                            .tag(project as Project?)
-                    }
-                } label: {
-                    Text("Choose a Project")
-                        .foregroundStyle(.strokeBorder)
-                }
-                .pickerStyle(.navigationLink)
-                .font(.subheadline)
-                .padding()
-                .overlay {
-                    RoundedRectangle(cornerRadius: 10)
-                        .stroke(.strokeBorder, lineWidth: 1)
-                }
+                PickerProjectView(project: $project, text: "Create new")
                 
                 Spacer()
             }

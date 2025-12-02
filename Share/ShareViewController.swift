@@ -57,10 +57,7 @@ fileprivate struct ShareView: View {
                     Text("Add")
                         .font(.title3.bold())
                         .frame(maxWidth: .infinity)
-                        .overlay(alignment: .leading) {
-                            Button("Cancel", action: dismiss)
-                                .tint(.red)
-                        }
+                        .overlayModifierRounded()
                         .padding(.bottom, 10)
                     
                     ScrollView(.horizontal) {
@@ -80,23 +77,7 @@ fileprivate struct ShareView: View {
                     .scrollIndicators(.hidden)
                     
                     if !db.projects.isEmpty {
-                        Picker(selection: $project) {
-                            Text("None")
-                                .tag(nil as Project?)
-                            ForEach(db.projects.sorted()) { project in
-                                Text(project.unwrappedName)
-                                    .tag(project as Project?)
-                            }
-                        } label: {
-                            Text("Choose a Project")
-                        }
-                        .pickerStyle(.navigationLink)
-                        .font(.subheadline)
-                        .padding()
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(.strokeBorder, lineWidth: 1)
-                        }
+                        PickerProjectView(project: $project, text: "None")
                     }
                     
                     Button("Save", systemImage: "checkmark", action: saveImages)

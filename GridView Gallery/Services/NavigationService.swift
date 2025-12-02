@@ -11,9 +11,7 @@ enum Destination: Hashable {
     case search
     case debug
     case imageDetails(ImageItem, [ImageItem])
-    
-    // fill other depending your needs
-}
+    }
 
 @Observable
 class NavigationService {
@@ -46,37 +44,3 @@ class NavigationService {
         path = NavigationPath()
     }
 }
-
-/// Usage
-/// In App.swift
-/// Not needed to add NavigationStack in sub views
-/* SETUP
- import SwiftUI
- 
- @main
- struct App: App {
- @State private var navigation = NavigationService()
- 
- var body: some Scene {
- WindowGroup {
- NavigationStack(path: $navigation.path) {
- ContentView()
- .navigationDestination(for: Destination.self) { destination in
- navigation.returnView(destination)
- }
- }
- .environment(navigation)
- }
- }
- }
- */
-
-/* USAGE on sub Views
- Button("Main") {
- navigation.navigate(to: Destination.main)
- }
- 
- NavigationLink(value: Destination.main) {
- Text("Main")
- }
- */

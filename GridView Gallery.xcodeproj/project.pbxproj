@@ -55,6 +55,8 @@
 				Models/Tag.swift,
 				Resources/Assets.xcassets,
 				Services/DatabaseService.swift,
+				Views/Components/OverlayModifierRounded.swift,
+				Views/Components/PickerProjectView.swift,
 			);
 			target = E54A12A72ED5B11B0001B325 /* Share */;
 		};

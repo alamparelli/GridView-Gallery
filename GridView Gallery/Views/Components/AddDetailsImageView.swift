@@ -17,24 +17,7 @@ struct AddDetailsImageView: View {
     var body: some View {
         Section {
             if !db.projects.isEmpty {
-                Picker(selection: $project) {
-                    Text("None")
-                        .tag(nil as Project?)
-                    ForEach(db.projects.sorted()) { project in
-                        Text(project.unwrappedName)
-                            .tag(project as Project?)
-                    }
-                } label: {
-                    Text("Choose a Project")
-//                        .foregroundStyle(.strokeBorder)
-                }
-                .pickerStyle(.navigationLink)
-                .font(.subheadline)
-                .padding()
-                .overlay {
-                    RoundedRectangle(cornerRadius: 10)
-                        .stroke(.strokeBorder, lineWidth: 1)
-                }
+                PickerProjectView(project: $project, text: "None")
             }
             
             TagsView(image: $imageItem, showEditDetails: showEditDetails)
@@ -47,10 +30,7 @@ struct AddDetailsImageView: View {
                     .font(.subheadline)
                     .padding(.horizontal, 4)
                     .frame(maxWidth: .infinity, minHeight: 75)
-                    .overlay {
-                        RoundedRectangle(cornerRadius: 10)
-                            .stroke(.strokeBorder, lineWidth: 1)
-                    }
+                    .overlayModifierRounded()
             }
         }
     }

@@ -18,10 +18,7 @@ struct DetailReadOnlyView: View {
             .pickerStyle(.navigationLink)
             .font(.subheadline)
             .padding()
-            .overlay {
-                RoundedRectangle(cornerRadius: 10)
-                    .stroke(.strokeBorder, lineWidth: 1)
-            }
+            .overlayModifierRounded()
 
             TagsView(image: $image)
             
@@ -34,31 +31,14 @@ struct DetailReadOnlyView: View {
                     .padding(.horizontal, 4)
                     .frame(maxWidth: .infinity, minHeight: 75)
                     .disabled(true)
-                    .overlay {
-                        RoundedRectangle(cornerRadius: 10)
-                            .stroke(.strokeBorder, lineWidth: 1)
-                    }
+                    .overlayModifierRounded()
                     .onAppear {
                         if let image = image {
                             description = image.fulldescription ?? ""
                         }
                     }
-//
-//                Text(image.fulldescription ?? "")
-//                        .font(.subheadline)
-//                        .padding(.horizontal, 4)
-//                        .frame(maxWidth: .infinity, minHeight: 75)
-//                        .overlay {
-//                            RoundedRectangle(cornerRadius: 10)
-//                                .stroke(.strokeBorder, lineWidth: 1)
-//                        }
             }
         }
         .padding()
     }
 }
-
-
-//#Preview {
-//    DetailReadOnlyView()
-//}

@@ -68,10 +68,7 @@ struct LazyPhotoView: View {
     
     private var placeholderView: some View {
         Color.gray.opacity(0.3)
-            .overlay {
-                Image(systemName: "photo")
-                    .foregroundStyle(.secondary)
-            }
+            .overlayModifierRounded()
     }
 }
 //
