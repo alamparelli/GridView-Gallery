@@ -111,15 +111,15 @@ fileprivate struct ShareView: View {
             }
         }
     }
-    
+
     func extractItems(size: CGSize) {
         guard items.isEmpty else { return }
         
-        for (_, provider) in itemProviders.enumerated() {
+        for provider in itemProviders {
             
             // Check if it's a URL (like from Safari)
             if provider.hasItemConformingToTypeIdentifier(UTType.url.identifier) {
-                provider.loadItem(forTypeIdentifier: UTType.url.identifier, options: nil) { item, error in
+                provider.loadItem(forTypeIdentifier: UTType.url.identifier, options: nil) { item, _ in
                     if let url = item as? URL {
                         // Download the image from the URL
                         self.downloadImage(from: url, size: size)
@@ -128,7 +128,7 @@ fileprivate struct ShareView: View {
             }
             // Check if it's direct image data (like from Photos app)
             else if provider.hasItemConformingToTypeIdentifier(UTType.image.identifier) {
-                let _ = provider.loadDataRepresentation(for: .image) { data, error in
+                let _ = provider.loadDataRepresentation(for: .image) { data, _ in
                     if let data, let image = UIImage(data: data) {
                         self.addImageToItems(imageData: data, image: image, size: size)
                     }
@@ -138,8 +138,8 @@ fileprivate struct ShareView: View {
     }
 
     func downloadImage(from url: URL, size: CGSize) {
-        URLSession.shared.dataTask(with: url) { data, response, error in
-            if let error {
+        URLSession.shared.dataTask(with: url) { data, _, error in
+            if error != nil {
                 return
             }
             
@@ -156,11 +156,11 @@ fileprivate struct ShareView: View {
             }
         }
     }
-    
+
     func dismiss() {
         extensionContext?.completeRequest(returningItems: [])
     }
-        
+
     func saveImages() {
         do {
             for item in items {
@@ -174,7 +174,7 @@ fileprivate struct ShareView: View {
         }
 
     }
-    
+
     private struct Item: Identifiable {
         let id = UUID()
         let imageData: Data
